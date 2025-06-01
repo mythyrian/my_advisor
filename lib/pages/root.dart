@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_advisor/pages/explore.dart';
 import 'package:my_advisor/pages/info.dart';
-import 'package:my_advisor/theme/color.dart';
+import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/widgets/bottombar_item.dart';
 
 import 'home.dart';

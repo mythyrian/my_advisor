@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:my_advisor/theme/color.dart';
+import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/utils/map_api.dart';
 
 class Map extends StatefulWidget {
@@ -85,29 +85,51 @@ class _MapState extends State<Map> {
                   markers: _markers,
                   myLocationEnabled: true,
                   myLocationButtonEnabled: false,
+                  zoomControlsEnabled: false,
                   onMapCreated: (GoogleMapController controller) async {
                     _controller.complete(controller);
                     visibleRegion = await controller.getVisibleRegion();
                   },
-                  onCameraIdle: () async {
-                    final controller = await _controller.future;
-                    visibleRegion = await controller.getVisibleRegion();
-
-                    if (visibleRegion != null) {
-                      _fetchNearbyPlaces(visibleRegion!);
-                    }
-                  },
+                  onCameraIdle: () async {},
                 ),
       ),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 60),
-        child: FloatingActionButton(
-          onPressed: _centerMyPosition,
-          elevation: 0,
-          highlightElevation: 0,
-          backgroundColor: AppColor.sky,
-          child: const Icon(Icons.my_location, color: AppColor.primary),
-        ),
+      floatingActionButton: Stack(
+        children: [
+          // 🔍 Bottone "Cerca locali"
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 120, left: 40),
+              child: FloatingActionButton.extended(
+                heroTag: 'searchButton',
+                elevation: 0,
+                highlightElevation: 0,
+                onPressed: () async {
+                  final controller = await _controller.future;
+                  final bounds = await controller.getVisibleRegion();
+                  _fetchNearbyPlaces(bounds);
+                },
+                backgroundColor: AppColor.sky,
+                icon: const Icon(Icons.search, color: AppColor.primary),
+                label: const Text("Search by filter"),
+              ),
+            ),
+          ),
+
+          // 📍 Bottone "Centrami"
+          Positioned(
+            bottom: 60,
+            right: 0,
+            child: FloatingActionButton(
+              heroTag: 'centerButton',
+              onPressed: _centerMyPosition,
+              elevation: 0,
+              highlightElevation: 0,
+              backgroundColor: AppColor.sky,
+              child: const Icon(Icons.my_location, color: AppColor.primary),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -135,10 +157,36 @@ class _MapState extends State<Map> {
         final lat = result['geometry']['location']['lat'];
         final lng = result['geometry']['location']['lng'];
 
+        final types = result['types'] as List<dynamic>;
+        final mainType = types.isNotEmpty ? types[0] : 'default';
+        //final icon = await _getIconForType(mainType);
+
         _addMarker(LatLng(lat, lng), name);
       }
     }
   }
+
+  /* Future<Icon> _getIconForType(String type) async {
+  Icon icon;
+  switch (type) {
+    case 'restaurant':
+      icon = 'assets/icon/user.png';
+      break;
+    case 'cafe':
+      icon = 'assets/icon/user.png';
+      break;
+    case 'bar':
+      icon = 'assets/icon/user.png';
+      break;
+    case 'gym':
+      icon = 'assets/icon/user.png';
+      break;
+    default:
+      icon = 'assets/icon/user.png';
+  }
+
+  return icon;
+} */
 
   void _addMarker(LatLng position, String name) {
     setState(() {

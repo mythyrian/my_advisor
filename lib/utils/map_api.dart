@@ -4,9 +4,7 @@ import 'dart:convert';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-Future<List<dynamic>?> fetchNearbyPlaces(
-  LatLngBounds bounds,
-) async {
+Future<List<dynamic>?> fetchNearbyPlaces(LatLngBounds bounds) async {
   final String? apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
   final String placeType = 'restaurant';
 

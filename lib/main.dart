@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'pages/root.dart';
-import 'theme/color.dart';
+import 'constant/color.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 Future<void> main() async {

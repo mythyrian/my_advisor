@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_advisor/theme/color.dart';
+import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/utils/data.dart';
 import 'package:my_advisor/widgets/broker_item.dart';
 import 'package:my_advisor/widgets/company_item.dart';

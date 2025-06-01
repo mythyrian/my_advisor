@@ -1,6 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:my_advisor/theme/color.dart';
+import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/utils/data.dart';
 import 'package:my_advisor/widgets/category_item.dart';
 import 'package:my_advisor/widgets/custom_image.dart';
