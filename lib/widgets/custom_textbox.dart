@@ -24,12 +24,12 @@ class CustomTextBox extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 3),
       height: 40,
       decoration: BoxDecoration(
-        color: AppColor.textBoxColor,
-        border: Border.all(color: AppColor.textBoxColor),
+        color: Color(AppColor.textBoxColor),
+        border: Border.all(color: Color(AppColor.textBoxColor)),
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: AppColor.shadowColor.withOpacity(.05),
+            color: Color(AppColor.shadowColor).withOpacity(.05),
             spreadRadius: .5,
             blurRadius: .5,
             offset: Offset(0, 1), // changes position of shadow

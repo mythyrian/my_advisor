@@ -47,7 +47,7 @@ class _RootAppState extends State<RootApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.appBgColor,
+      backgroundColor: Color(AppColor.appBgColor),
       body: _buildPage(),
       floatingActionButton: _buildBottomBar(),
       floatingActionButtonLocation:
@@ -71,11 +71,11 @@ class _RootAppState extends State<RootApp> {
       width: double.infinity,
       margin: EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
-        color: AppColor.bottomBarColor,
+        color: Color(AppColor.bottomBarColor),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColor.shadowColor.withOpacity(0.1),
+            color: Color(AppColor.shadowColor).withOpacity(0.1),
             blurRadius: 1,
             spreadRadius: 1,
             offset: Offset(0, 1),
@@ -92,7 +92,7 @@ class _RootAppState extends State<RootApp> {
                 ? _barItems[index]["active_icon"]
                 : _barItems[index]["icon"],
             isActive: _activeTab == index,
-            activeColor: AppColor.primary,
+            activeColor: Color(AppColor.primary),
             onTap: () {
               setState(() {
                 _activeTab = index;

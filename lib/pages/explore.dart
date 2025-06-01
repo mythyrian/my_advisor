@@ -20,7 +20,7 @@ class _ExplorePageState extends State<ExplorePage> {
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
-          backgroundColor: AppColor.appBgColor,
+          backgroundColor: Color(AppColor.appBgColor),
           pinned: true,
           snap: true,
           floating: true,
@@ -42,7 +42,7 @@ class _ExplorePageState extends State<ExplorePage> {
         ),
         const SizedBox(width: 10),
         IconBox(
-          bgColor: AppColor.secondary,
+          bgColor: Color(AppColor.secondary),
           radius: 10,
           child: Icon(Icons.filter_list_rounded, color: Colors.white),
         ),
@@ -102,7 +102,7 @@ class _ExplorePageState extends State<ExplorePage> {
       companies.length,
       (index) => CompanyItem(
         data: companies[index],
-        color: AppColor.listColors[index % 10],
+        color: Color(AppColor.listColors[index % 10]),
         selected: index == _selectedCategory,
         onTap: () {
           setState(() {

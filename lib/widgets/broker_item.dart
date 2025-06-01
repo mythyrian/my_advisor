@@ -17,7 +17,7 @@ class BrokerItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: AppColor.shadowColor.withOpacity(0.1),
+            color: Color(AppColor.shadowColor).withOpacity(0.1),
             spreadRadius: .5,
             blurRadius: 1,
             offset: Offset(0, 1), // changes position of shadow
@@ -31,7 +31,7 @@ class BrokerItem extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             data["description"],
-            style: TextStyle(height: 1.5, color: AppColor.darker),
+            style: TextStyle(height: 1.5, color: Color(AppColor.darker)),
           ),
           const SizedBox(height: 10),
           _buildRate(),
@@ -66,11 +66,11 @@ class BrokerItem extends StatelessWidget {
   Widget _buildRate() {
     return Row(
       children: [
-        Icon(Icons.star, size: 16, color: AppColor.yellow),
-        Icon(Icons.star, size: 16, color: AppColor.yellow),
-        Icon(Icons.star, size: 16, color: AppColor.yellow),
-        Icon(Icons.star, size: 16, color: AppColor.yellow),
-        Icon(Icons.star_outline, size: 16, color: AppColor.yellow),
+        Icon(Icons.star, size: 16, color: Color(AppColor.yellow)),
+        Icon(Icons.star, size: 16, color: Color(AppColor.yellow)),
+        Icon(Icons.star, size: 16, color: Color(AppColor.yellow)),
+        Icon(Icons.star, size: 16, color: Color(AppColor.yellow)),
+        Icon(Icons.star_outline, size: 16, color: Color(AppColor.yellow)),
       ],
     );
   }

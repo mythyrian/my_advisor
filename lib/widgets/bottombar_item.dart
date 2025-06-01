@@ -6,8 +6,8 @@ class BottomBarItem extends StatelessWidget {
     this.icon, {
     super.key,
     this.onTap,
-    this.color = AppColor.inActiveColor,
-    this.activeColor = AppColor.primary,
+    this.color = const Color(AppColor.inActiveColor),
+    this.activeColor = const Color(AppColor.primary),
     this.isActive = false,
     this.isNotified = false,
   });
@@ -34,7 +34,7 @@ class BottomBarItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(50),
                 color:
                     isActive
-                        ? AppColor.primary.withOpacity(.1)
+                        ? Color(AppColor.primary).withOpacity(.1)
                         : Colors.transparent,
               ),
               child: Icon(

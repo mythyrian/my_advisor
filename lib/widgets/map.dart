@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/utils/map_api.dart';
+import 'package:my_advisor/widgets/filter_dialog_content.dart';
 
 class Map extends StatefulWidget {
   const Map({super.key});
@@ -95,7 +96,6 @@ class _MapState extends State<Map> {
       ),
       floatingActionButton: Stack(
         children: [
-          // 🔍 Bottone "Cerca locali"
           Align(
             alignment: Alignment.topCenter,
             child: Padding(
@@ -109,14 +109,24 @@ class _MapState extends State<Map> {
                   final bounds = await controller.getVisibleRegion();
                   _fetchNearbyPlaces(bounds);
                 },
-                backgroundColor: AppColor.sky,
-                icon: const Icon(Icons.search, color: AppColor.primary),
+                backgroundColor: Color(AppColor.sky),
+                icon: const Icon(Icons.search, color: Color(AppColor.primary)),
                 label: const Text("Search by filter"),
               ),
             ),
           ),
-
-          // 📍 Bottone "Centrami"
+          Positioned(
+            bottom: 125,
+            right: 0,
+            child: FloatingActionButton(
+              heroTag: 'filterButton',
+              onPressed: _openFilterList,
+              elevation: 0,
+              highlightElevation: 0,
+              backgroundColor: Color(AppColor.sky),
+              child: const Icon(Icons.tune, color: Color(AppColor.primary)),
+            ),
+          ),
           Positioned(
             bottom: 60,
             right: 0,
@@ -125,12 +135,29 @@ class _MapState extends State<Map> {
               onPressed: _centerMyPosition,
               elevation: 0,
               highlightElevation: 0,
-              backgroundColor: AppColor.sky,
-              child: const Icon(Icons.my_location, color: AppColor.primary),
+              backgroundColor: Color(AppColor.sky),
+              child: const Icon(
+                Icons.my_location,
+                color: Color(AppColor.primary),
+              ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  void _openFilterList() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: const FilterDialogContent(),
+        );
+      },
     );
   }
 
@@ -157,36 +184,14 @@ class _MapState extends State<Map> {
         final lat = result['geometry']['location']['lat'];
         final lng = result['geometry']['location']['lng'];
 
-        final types = result['types'] as List<dynamic>;
+        /* final types = result['types'] as List<dynamic>;
         final mainType = types.isNotEmpty ? types[0] : 'default';
-        //final icon = await _getIconForType(mainType);
+        final icon = await _getIconForType(mainType); */
 
         _addMarker(LatLng(lat, lng), name);
       }
     }
   }
-
-  /* Future<Icon> _getIconForType(String type) async {
-  Icon icon;
-  switch (type) {
-    case 'restaurant':
-      icon = 'assets/icon/user.png';
-      break;
-    case 'cafe':
-      icon = 'assets/icon/user.png';
-      break;
-    case 'bar':
-      icon = 'assets/icon/user.png';
-      break;
-    case 'gym':
-      icon = 'assets/icon/user.png';
-      break;
-    default:
-      icon = 'assets/icon/user.png';
-  }
-
-  return icon;
-} */
 
   void _addMarker(LatLng position, String name) {
     setState(() {

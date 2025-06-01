@@ -20,7 +20,7 @@ class PropertyItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(
-            color: AppColor.shadowColor.withOpacity(0.1),
+            color: Color(AppColor.shadowColor).withOpacity(0.1),
             spreadRadius: .5,
             blurRadius: 1,
             offset: Offset(0, 1), // changes position of shadow
@@ -44,7 +44,7 @@ class PropertyItem extends StatelessWidget {
 
   Widget _buildFavorite() {
     return IconBox(
-      bgColor: AppColor.red,
+      bgColor: Color(AppColor.red),
       child: Icon(
         data["is_favorited"] ? Icons.favorite : Icons.favorite_border,
         color: Colors.white,
@@ -66,11 +66,11 @@ class PropertyItem extends StatelessWidget {
         const SizedBox(height: 5),
         Row(
           children: [
-            Icon(Icons.place_outlined, color: AppColor.darker, size: 13),
+            Icon(Icons.place_outlined, color: Color(AppColor.darker), size: 13),
             const SizedBox(width: 3),
             Text(
               data["location"],
-              style: TextStyle(fontSize: 13, color: AppColor.darker),
+              style: TextStyle(fontSize: 13, color: Color(AppColor.darker)),
             ),
           ],
         ),
@@ -79,7 +79,7 @@ class PropertyItem extends StatelessWidget {
           data["price"],
           style: TextStyle(
             fontSize: 15,
-            color: AppColor.primary,
+            color: Color(AppColor.primary),
             fontWeight: FontWeight.w500,
           ),
         ),

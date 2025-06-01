@@ -23,7 +23,7 @@ class _InfoPageState extends State<InfoPage> {
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
-          backgroundColor: AppColor.appBgColor,
+          backgroundColor: Color(AppColor.appBgColor),
           pinned: true,
           snap: true,
           floating: true,
@@ -47,7 +47,7 @@ class _InfoPageState extends State<InfoPage> {
                 Text(
                   "Hello!",
                   style: TextStyle(
-                    color: AppColor.darker,
+                    color: Color(AppColor.darker),
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                   ),
@@ -67,7 +67,7 @@ class _InfoPageState extends State<InfoPage> {
               width: 35,
               height: 35,
               trBackground: true,
-              borderColor: AppColor.primary,
+              borderColor: Color(AppColor.primary),
               radius: 10,
             ),
           ],
@@ -97,7 +97,7 @@ class _InfoPageState extends State<InfoPage> {
                 ),
                 Text(
                   "See all",
-                  style: TextStyle(fontSize: 14, color: AppColor.darker),
+                  style: TextStyle(fontSize: 14, color: Color(AppColor.darker)),
                 ),
               ],
             ),
@@ -116,7 +116,7 @@ class _InfoPageState extends State<InfoPage> {
                 ),
                 Text(
                   "See all",
-                  style: TextStyle(fontSize: 14, color: AppColor.darker),
+                  style: TextStyle(fontSize: 14, color: Color(AppColor.darker)),
                 ),
               ],
             ),
@@ -135,7 +135,7 @@ class _InfoPageState extends State<InfoPage> {
                 ),
                 Text(
                   "See all",
-                  style: TextStyle(fontSize: 14, color: AppColor.darker),
+                  style: TextStyle(fontSize: 14, color: Color(AppColor.darker)),
                 ),
               ],
             ),
@@ -161,7 +161,7 @@ class _InfoPageState extends State<InfoPage> {
           ),
           const SizedBox(width: 10),
           IconBox(
-            bgColor: AppColor.secondary,
+            bgColor: Color(AppColor.secondary),
             radius: 10,
             child: Icon(Icons.filter_list_rounded, color: Colors.white),
           ),
