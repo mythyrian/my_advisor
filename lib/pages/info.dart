@@ -10,14 +10,14 @@ import 'package:my_advisor/widgets/property_item.dart';
 import 'package:my_advisor/widgets/recent_item.dart';
 import 'package:my_advisor/widgets/recommend_item.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class InfoPage extends StatefulWidget {
+  const InfoPage({super.key});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _InfoPageState createState() => _InfoPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _InfoPageState extends State<InfoPage> {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(

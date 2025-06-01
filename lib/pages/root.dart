@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_advisor/pages/explore.dart';
+import 'package:my_advisor/pages/info.dart';
 import 'package:my_advisor/theme/color.dart';
 import 'package:my_advisor/widgets/bottombar_item.dart';
 
@@ -29,17 +30,17 @@ class _RootAppState extends State<RootApp> {
     {
       "icon": Icons.favorite_border,
       "active_icon": Icons.favorite_outlined,
-      "page": HomePage(),
+      "page": InfoPage(),
     },
     {
       "icon": Icons.forum_outlined,
       "active_icon": Icons.forum_rounded,
-      "page": HomePage(),
+      "page": InfoPage(),
     },
     {
       "icon": Icons.settings_outlined,
       "active_icon": Icons.settings_rounded,
-      "page": HomePage(),
+      "page": InfoPage(),
     },
   ];
 
