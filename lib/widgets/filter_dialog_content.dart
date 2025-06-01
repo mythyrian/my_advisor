@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/color.dart';
+import 'package:my_advisor/constant/place_type.dart';
 import 'package:my_advisor/utils/hive_store.dart';
 import 'package:my_advisor/utils/icon_service.dart';
 
@@ -11,14 +12,20 @@ class FilterDialogContent extends StatefulWidget {
 }
 
 class _FilterDialogContentState extends State<FilterDialogContent> {
-  RangeValues _priceRange = const RangeValues(1, 5);
-
+  late RangeValues prefRange;
+  late Map<dynamic, dynamic> placeTypeRef;
   late List<dynamic> placeTypeWithCheck;
 
   @override
   void initState() {
     super.initState();
-    placeTypeWithCheck = HiveStore.get("place_type_pref");
+    final originalPlaceTypePref = HiveStore.get("place_type_pref");
+    placeTypeRef = originalPlaceTypePref;
+    placeTypeWithCheck = PlaceType.placeTypeList;
+    final rawRange = HiveStore.get("range_review_pref");
+    final min = (rawRange?["min"] ?? 1).toDouble();
+    final max = (rawRange?["max"] ?? 5).toDouble();
+    prefRange = RangeValues(min, max);
   }
 
   @override
@@ -42,31 +49,31 @@ class _FilterDialogContentState extends State<FilterDialogContent> {
               children: [
                 Row(
                   children: [
-                    Text("${_priceRange.start.round()}"),
+                    Text("${prefRange.start.round()}"),
                     Icon(Icons.star, size: 24, color: Color(AppColor.yellow)),
                   ],
                 ),
                 Row(
                   children: [
-                    Text("${_priceRange.end.round()}"),
+                    Text("${prefRange.end.round()}"),
                     Icon(Icons.star, size: 24, color: Color(AppColor.yellow)),
                   ],
                 ),
               ],
             ),
             RangeSlider(
-              values: _priceRange,
+              values: prefRange,
               min: 1,
               max: 5,
               divisions: 4,
               labels: RangeLabels(
-                _priceRange.start.toStringAsFixed(0),
-                _priceRange.end.toStringAsFixed(0),
+                prefRange.start.toStringAsFixed(0),
+                prefRange.end.toStringAsFixed(0),
               ),
               activeColor: Color(AppColor.primary),
               onChanged: (values) {
                 setState(() {
-                  _priceRange = values;
+                  prefRange = values;
                 });
               },
             ),
@@ -94,10 +101,10 @@ class _FilterDialogContentState extends State<FilterDialogContent> {
                           ),
                         ],
                       ),
-                      selected: type['checked'] as bool,
+                      selected: type['name'] == placeTypeRef["name"],
                       onSelected: (selected) {
                         setState(() {
-                          type['checked'] = selected;
+                          placeTypeRef = type;
                         });
                       },
                       selectedColor: Color(AppColor.primary),
@@ -124,7 +131,11 @@ class _FilterDialogContentState extends State<FilterDialogContent> {
                     backgroundColor: Color(AppColor.sky),
                   ),
                   onPressed: () {
-                    HiveStore.put("place_type_pref", placeTypeWithCheck);
+                    HiveStore.put("place_type_pref", placeTypeRef);
+                    HiveStore.put("range_review_pref", {
+                      "min": prefRange.start,
+                      "max": prefRange.end,
+                    });
                     Navigator.of(context).pop();
                   },
                   child: const Text("Apply"),

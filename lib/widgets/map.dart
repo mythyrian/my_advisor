@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:my_advisor/constant/color.dart';
+import 'package:my_advisor/utils/hive_store.dart';
 import 'package:my_advisor/utils/map_api.dart';
 import 'package:my_advisor/widgets/filter_dialog_content.dart';
+import 'package:toastification/toastification.dart';
 
 class Map extends StatefulWidget {
   const Map({super.key});
@@ -176,7 +178,27 @@ class _MapState extends State<Map> {
   }
 
   Future<void> _fetchNearbyPlaces(LatLngBounds bounds) async {
-    final response = await fetchNearbyPlaces(bounds);
+    final originalPlaceTypePref = HiveStore.get("place_type_pref");
+
+    if (!(originalPlaceTypePref["name"] ?? false)) {
+      toastification.show(
+        type: ToastificationType.warning,
+        style: ToastificationStyle.fillColored,
+        title: Text('Empty preference!'),
+        description: RichText(
+          text: const TextSpan(
+            text: 'Please choose a preference in the filter',
+          ),
+        ),
+        autoCloseDuration: const Duration(seconds: 3),
+      );
+      return;
+    }
+
+    final response = await fetchNearbyPlaces(
+      bounds,
+      originalPlaceTypePref["name"],
+    );
 
     if (response != null) {
       for (var result in response) {

@@ -4,6 +4,7 @@ import 'pages/root.dart';
 import 'constant/color.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:toastification/toastification.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,11 +21,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'My Advisor App',
-      theme: ThemeData(primaryColor: Color(AppColor.primary)),
-      home: const RootApp(),
+    return ToastificationWrapper(
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'My Advisor App',
+        theme: ThemeData(primaryColor: Color(AppColor.primary)),
+        home: const RootApp(),
+      ),
     );
   }
 }
