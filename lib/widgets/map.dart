@@ -203,13 +203,12 @@ class _MyMapState extends State<MyMap> {
   }
 
   Widget _buildPlacePanel(ScrollController sc) {
-  if (_selectedPlace == null) {
-    return const Center(child: CircularProgressIndicator());
+    if (_selectedPlace == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    return PlaceInfo(placeData: _selectedPlace!, scrollController: sc);
   }
-
-  return  PlaceInfo(placeData : _selectedPlace!, scrollController : sc ); 
-}
-
 
   void _openFilterList() {
     showDialog(
@@ -323,7 +322,7 @@ class _MyMapState extends State<MyMap> {
           icon: icon,
           infoWindow: InfoWindow(title: name),
           onTap: () async {
-             final response = await fetchPlaceDetails(placeId);
+            final response = await fetchPlaceDetails(placeId);
             setState(() {
               _selectedPlace = response;
             });

@@ -83,7 +83,7 @@ Future<Map<String, dynamic>?> fetchPlaceDetails(String placeId) async {
   }
 }
 
-String getImageUrl(String ref ) {
+String getImageUrl(String ref) {
   final String? apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
   return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=$ref&key=$apiKey";
 }

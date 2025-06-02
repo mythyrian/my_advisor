@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/color.dart';
-import 'custom_image.dart';
 
-class BrokerItem extends StatelessWidget {
-  const BrokerItem({super.key, required this.data});
+class ReviewItem extends StatelessWidget {
+  const ReviewItem({super.key, required this.data});
 
   final data;
 
@@ -29,12 +28,16 @@ class BrokerItem extends StatelessWidget {
         children: [
           _buildProfile(),
           const SizedBox(height: 10),
-          Text(
-            data["description"],
-            style: TextStyle(height: 1.5, color: Color(AppColor.darker)),
+          SizedBox(
+            height: 60,
+            width: 150,
+            child: Text(
+              data["text"],
+              style: TextStyle(height: 1.5, color: Color(AppColor.darker)),
+            ),
           ),
           const SizedBox(height: 10),
-          _buildRate(),
+          _buildRate(data["rating"]),
         ],
       ),
     );
@@ -43,35 +46,33 @@ class BrokerItem extends StatelessWidget {
   Widget _buildProfile() {
     return Row(
       children: [
-        CustomImage(data["image"], width: 35, height: 35),
-        const SizedBox(width: 10),
-        Column(
+        Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              data["name"],
+              data["author_name"],
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
             ),
-            const SizedBox(height: 3),
-            Text(
-              data["type"],
-              style: TextStyle(fontSize: 12, color: Colors.grey),
-            ),
+            const SizedBox(width: 10),
+          Text(
+            data["relative_time_description"],
+            style: TextStyle(height: 1.5, color: Color(AppColor.darker)),
+          ),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildRate() {
-    return Row(
-      children: [
-        Icon(Icons.star, size: 16, color: Color(AppColor.yellow)),
-        Icon(Icons.star, size: 16, color: Color(AppColor.yellow)),
-        Icon(Icons.star, size: 16, color: Color(AppColor.yellow)),
-        Icon(Icons.star, size: 16, color: Color(AppColor.yellow)),
-        Icon(Icons.star_outline, size: 16, color: Color(AppColor.yellow)),
-      ],
-    );
-  }
+Widget _buildRate(int rating) {
+  return Row(
+    children: List.generate(5, (index) {
+      return Icon(
+        index < rating ? Icons.star : Icons.star_outline,
+        size: 16,
+        color: Color(AppColor.yellow),
+      );
+    }),
+  );
+}
 }

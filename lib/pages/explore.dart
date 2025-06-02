@@ -76,7 +76,7 @@ class _ExplorePageState extends State<ExplorePage> {
           const SizedBox(height: 20),
           _buildCompanies(),
           const SizedBox(height: 20),
-          _buildBrokers(),
+          _buildReviewers(),
           const SizedBox(height: 100),
         ],
       ),
@@ -119,10 +119,10 @@ class _ExplorePageState extends State<ExplorePage> {
     );
   }
 
-  _buildBrokers() {
+  _buildReviewers() {
     List<Widget> lists = List.generate(
-      brokers.length,
-      (index) => BrokerItem(data: brokers[index]),
+      reviewers.length,
+      (index) => ReviewItem(data: reviewers[index]),
     );
 
     return Padding(

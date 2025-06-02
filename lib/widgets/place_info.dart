@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_advisor/utils/map_api.dart';
+import 'package:my_advisor/widgets/broker_item.dart';
 
 class PlaceInfo extends StatefulWidget {
   final Map<String, dynamic> placeData;
@@ -16,7 +17,6 @@ class PlaceInfo extends StatefulWidget {
 }
 
 class _PlaceInfoState extends State<PlaceInfo> {
-
   @override
   Widget build(BuildContext context) {
     final place = widget.placeData;
@@ -64,32 +64,33 @@ class _PlaceInfoState extends State<PlaceInfo> {
 
         images.isNotEmpty
             ? SizedBox(
-                height: 100,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: images.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 10),
-                  itemBuilder: (context, index) {
-                    final ref = images[index]['photo_reference'];
-                    final url = getImageUrl(ref);
+              height: 100,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: images.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 10),
+                itemBuilder: (context, index) {
+                  final ref = images[index]['photo_reference'];
+                  final url = getImageUrl(ref);
 
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        url,
-                        width: 120,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
-                    );
-                  },
-                ),
-              )
-            : const SizedBox(
-                height: 100,
-                child: Center(child: Text("No online image available")),
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: Image.network(
+                      url,
+                      width: 120,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  );
+                },
               ),
-
+            )
+            : const SizedBox(
+              height: 100,
+              child: Center(child: Text("No online image available")),
+            ),
+        const SizedBox(height: 10),
+        SizedBox(height: 150, child: _buildReviewers()),
         const SizedBox(height: 20),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -112,6 +113,25 @@ class _PlaceInfoState extends State<PlaceInfo> {
           ],
         ),
       ],
+    );
+  }
+
+  Widget _buildReviewers() {
+    final reviews = widget.placeData["reviews"] as List;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
+      child: SizedBox(
+        height: 120, // altezza fissa per le card delle recensioni
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: reviews.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 10),
+          itemBuilder: (context, index) {
+            return ReviewItem(data: reviews[index]);
+          },
+        ),
+      ),
     );
   }
 }
