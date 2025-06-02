@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:toastification/toastification.dart';
 
 Future<List<dynamic>?> fetchNearbyPlaces(LatLngBounds bounds, type) async {
   final String? apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
@@ -28,8 +30,62 @@ Future<List<dynamic>?> fetchNearbyPlaces(LatLngBounds bounds, type) async {
   if (data['status'] == 'OK') {
     return data['results'];
   } else {
+    toastification.show(
+      type: ToastificationType.error,
+      style: ToastificationStyle.fillColored,
+      title: Text('Errore Google API!'),
+      description: RichText(
+        text: TextSpan(text: "Errore Google API: ${data['status']}"),
+      ),
+      autoCloseDuration: const Duration(seconds: 3),
+    );
     return null;
   }
+}
+
+Future<Map<String, dynamic>?> fetchPlaceDetails(String placeId) async {
+  final String? apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
+
+  final url = Uri.parse(
+    'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$apiKey',
+  );
+
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    final data = json.decode(response.body);
+
+    if (data['status'] == 'OK') {
+      return data['result'];
+    } else {
+      toastification.show(
+        type: ToastificationType.error,
+        style: ToastificationStyle.fillColored,
+        title: Text('Errore Google API!'),
+        description: RichText(
+          text: TextSpan(text: "Errore Google API: ${data['status']}"),
+        ),
+        autoCloseDuration: const Duration(seconds: 3),
+      );
+      return null;
+    }
+  } else {
+    toastification.show(
+      type: ToastificationType.error,
+      style: ToastificationStyle.fillColored,
+      title: Text('Errore HTTP!'),
+      description: RichText(
+        text: TextSpan(text: "Errore HTTP: ${response.statusCode}"),
+      ),
+      autoCloseDuration: const Duration(seconds: 3),
+    );
+    return null;
+  }
+}
+
+String getImageUrl(String ref ) {
+  final String? apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
+  return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=$ref&key=$apiKey";
 }
 
 double _calculateRadius(LatLngBounds bounds) {

@@ -8,19 +8,20 @@ import 'package:my_advisor/utils/hive_store.dart';
 import 'package:my_advisor/utils/icon_service.dart';
 import 'package:my_advisor/utils/map_api.dart';
 import 'package:my_advisor/widgets/filter_dialog_content.dart';
+import 'package:my_advisor/widgets/place_info.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:toastification/toastification.dart';
 import 'package:my_advisor/constant/place_type.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
-import 'package:flutter/services.dart' show rootBundle;
 
-class Map extends StatefulWidget {
-  const Map({super.key});
+class MyMap extends StatefulWidget {
+  const MyMap({super.key});
 
   @override
-  State<Map> createState() => _MapState();
+  State<MyMap> createState() => _MyMapState();
 }
 
-class _MapState extends State<Map> {
+class _MyMapState extends State<MyMap> {
   final Completer<GoogleMapController> _controller = Completer();
 
   CameraPosition? _initialPosition;
@@ -36,6 +37,9 @@ class _MapState extends State<Map> {
     /*final String style = await rootBundle.loadString('assets/map_style.json');
     controller.setMapStyle(style);*/
   }
+
+  final PanelController _panelController = PanelController();
+  Map<String, dynamic>? _selectedPlace;
 
   @override
   void initState() {
@@ -89,76 +93,123 @@ class _MapState extends State<Map> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child:
-            _initialPosition == null
-                ? const Center(child: CircularProgressIndicator())
-                : GoogleMap(
-                  mapType: MapType.normal,
-                  initialCameraPosition: _initialPosition!,
-                  markers: _markers,
-                  myLocationEnabled: true,
-                  myLocationButtonEnabled: false,
-                  zoomControlsEnabled: false,
-                  onMapCreated: (GoogleMapController controller) async {
-                    _onMapCreated(controller);
-                  },
-                  onCameraIdle: () async {},
-                ),
-      ),
-      floatingActionButton: Stack(
+      body: Stack(
         children: [
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 120, left: 40),
-              child: FloatingActionButton.extended(
-                heroTag: 'searchButton',
-                elevation: 0,
-                highlightElevation: 0,
-                onPressed: () async {
-                  final controller = await _controller.future;
-                  final bounds = await controller.getVisibleRegion();
-                  _fetchNearbyPlaces(bounds);
-                },
-                backgroundColor: Color(AppColor.sky),
-                icon: const Icon(Icons.search, color: Color(AppColor.primary)),
-                label: const Text("Search by filter"),
-              ),
+          Scaffold(
+            backgroundColor: Colors.white,
+            body: SafeArea(
+              child:
+                  _initialPosition == null
+                      ? const Center(child: CircularProgressIndicator())
+                      : GoogleMap(
+                        mapType: MapType.normal,
+                        initialCameraPosition: _initialPosition!,
+                        markers: _markers,
+                        myLocationEnabled: true,
+                        myLocationButtonEnabled: false,
+                        zoomControlsEnabled: false,
+                        onMapCreated: (GoogleMapController controller) async {
+                          _onMapCreated(controller);
+                        },
+                        onCameraIdle: () async {},
+                      ),
+            ),
+            floatingActionButton: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 120, left: 40),
+                    child: FloatingActionButton.extended(
+                      heroTag: 'searchButton',
+                      elevation: 0,
+                      highlightElevation: 0,
+                      onPressed: () async {
+                        final controller = await _controller.future;
+                        final bounds = await controller.getVisibleRegion();
+                        _fetchNearbyPlaces(bounds);
+                      },
+                      backgroundColor: Color(AppColor.sky),
+                      icon: const Icon(
+                        Icons.search,
+                        color: Color(AppColor.primary),
+                      ),
+                      label: const Text("Search by filter"),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 125,
+                  right: 0,
+                  child: FloatingActionButton(
+                    heroTag: 'filterButton',
+                    onPressed: _openFilterList,
+                    elevation: 0,
+                    highlightElevation: 0,
+                    backgroundColor: Color(AppColor.sky),
+                    child: const Icon(
+                      Icons.tune,
+                      color: Color(AppColor.primary),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 60,
+                  right: 0,
+                  child: FloatingActionButton(
+                    heroTag: 'centerButton',
+                    onPressed: _centerMyPosition,
+                    elevation: 0,
+                    highlightElevation: 0,
+                    backgroundColor: Color(AppColor.sky),
+                    child: const Icon(
+                      Icons.my_location,
+                      color: Color(AppColor.primary),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          Positioned(
-            bottom: 125,
-            right: 0,
-            child: FloatingActionButton(
-              heroTag: 'filterButton',
-              onPressed: _openFilterList,
-              elevation: 0,
-              highlightElevation: 0,
-              backgroundColor: Color(AppColor.sky),
-              child: const Icon(Icons.tune, color: Color(AppColor.primary)),
-            ),
-          ),
-          Positioned(
-            bottom: 60,
-            right: 0,
-            child: FloatingActionButton(
-              heroTag: 'centerButton',
-              onPressed: _centerMyPosition,
-              elevation: 0,
-              highlightElevation: 0,
-              backgroundColor: Color(AppColor.sky),
-              child: const Icon(
-                Icons.my_location,
-                color: Color(AppColor.primary),
-              ),
-            ),
+          SlidingUpPanel(
+            controller: _panelController,
+            minHeight: 0,
+            maxHeight: MediaQuery.of(context).size.height * 0.7,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            panelSnapping: true, // assicura lo snap
+            backdropEnabled:
+                true, // permette di interagire meglio con tutta l'area
+            panelBuilder:
+                (ScrollController sc) => GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onVerticalDragUpdate: (details) {
+                    _panelController.panelPosition +=
+                        details.primaryDelta! /
+                        MediaQuery.of(context).size.height;
+                  },
+                  onVerticalDragEnd: (details) {
+                    if (_panelController.panelPosition > 0.5) {
+                      _panelController.open();
+                    } else {
+                      _panelController.close();
+                    }
+                  },
+                  child: _buildPlacePanel(sc),
+                ),
           ),
         ],
       ),
     );
   }
+
+  Widget _buildPlacePanel(ScrollController sc) {
+  if (_selectedPlace == null) {
+    return const Center(child: CircularProgressIndicator());
+  }
+
+  return  PlaceInfo(placeData : _selectedPlace!, scrollController : sc ); 
+}
+
 
   void _openFilterList() {
     showDialog(
@@ -248,7 +299,7 @@ class _MapState extends State<Map> {
         final name = result['name'];
         final lat = result['geometry']['location']['lat'];
         final lng = result['geometry']['location']['lng'];
-        _addMarker(LatLng(lat, lng), name, circleAvatar);
+        _addMarker(LatLng(lat, lng), name, circleAvatar, result["place_id"]);
       }
     }
   }
@@ -257,6 +308,7 @@ class _MapState extends State<Map> {
     LatLng position,
     String name,
     Container myCircleAvatar,
+    String placeId,
   ) async {
     final icon = await myCircleAvatar.toBitmapDescriptor(
       logicalSize: const Size(80, 80),
@@ -270,6 +322,13 @@ class _MapState extends State<Map> {
           position: position,
           icon: icon,
           infoWindow: InfoWindow(title: name),
+          onTap: () async {
+             final response = await fetchPlaceDetails(placeId);
+            setState(() {
+              _selectedPlace = response;
+            });
+            _panelController.open();
+          },
         ),
       );
     });
