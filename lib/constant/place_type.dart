@@ -46,4 +46,12 @@ class PlaceType {
       'icon': "theaters",
     },
   ];
+
+  static int? getColorByName(String name) {
+    final type = placeTypeList.firstWhere(
+      (element) => element['name'] == name,
+      orElse: () => {},
+    );
+    return type['color'] as int;
+  }
 }

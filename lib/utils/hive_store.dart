@@ -11,7 +11,7 @@ class HiveStore {
       await _box.put("place_type_pref", {});
     }
     if (!_box.containsKey("range_reviw_pref")) {
-      await _box.put("range_review_pref", {"min": 1, "max": 5});
+      await _box.put("range_review_pref", {"min": 1.0, "max": 5.0});
     }
   }
 

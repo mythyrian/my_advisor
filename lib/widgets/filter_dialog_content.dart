@@ -65,10 +65,10 @@ class _FilterDialogContentState extends State<FilterDialogContent> {
               values: prefRange,
               min: 1,
               max: 5,
-              divisions: 4,
+              divisions: 8,
               labels: RangeLabels(
-                prefRange.start.toStringAsFixed(0),
-                prefRange.end.toStringAsFixed(0),
+                prefRange.start.toStringAsFixed(1),
+                prefRange.end.toStringAsFixed(1),
               ),
               activeColor: Color(AppColor.primary),
               onChanged: (values) {

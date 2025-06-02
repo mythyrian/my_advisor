@@ -5,9 +5,13 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/utils/hive_store.dart';
+import 'package:my_advisor/utils/icon_service.dart';
 import 'package:my_advisor/utils/map_api.dart';
 import 'package:my_advisor/widgets/filter_dialog_content.dart';
 import 'package:toastification/toastification.dart';
+import 'package:my_advisor/constant/place_type.dart';
+import 'package:widget_to_marker/widget_to_marker.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class Map extends StatefulWidget {
   const Map({super.key});
@@ -24,6 +28,14 @@ class _MapState extends State<Map> {
   double initZoom = 14.5;
   LatLngBounds? visibleRegion;
   final Set<Marker> _markers = {};
+
+  void _onMapCreated(GoogleMapController controller) async {
+    _controller.complete(controller);
+    visibleRegion = await controller.getVisibleRegion();
+
+    /*final String style = await rootBundle.loadString('assets/map_style.json');
+    controller.setMapStyle(style);*/
+  }
 
   @override
   void initState() {
@@ -90,8 +102,7 @@ class _MapState extends State<Map> {
                   myLocationButtonEnabled: false,
                   zoomControlsEnabled: false,
                   onMapCreated: (GoogleMapController controller) async {
-                    _controller.complete(controller);
-                    visibleRegion = await controller.getVisibleRegion();
+                    _onMapCreated(controller);
                   },
                   onCameraIdle: () async {},
                 ),
@@ -180,7 +191,7 @@ class _MapState extends State<Map> {
   Future<void> _fetchNearbyPlaces(LatLngBounds bounds) async {
     final originalPlaceTypePref = HiveStore.get("place_type_pref");
 
-    if (!(originalPlaceTypePref["name"] ?? false)) {
+    if (originalPlaceTypePref == null || originalPlaceTypePref.isEmpty) {
       toastification.show(
         type: ToastificationType.warning,
         style: ToastificationStyle.fillColored,
@@ -201,26 +212,63 @@ class _MapState extends State<Map> {
     );
 
     if (response != null) {
-      for (var result in response) {
+      setState(() {
+        _markers.clear();
+      });
+      final rawRange = HiveStore.get("range_review_pref");
+      final min = (rawRange?["min"] ?? 1).toDouble();
+      final max = (rawRange?["max"] ?? 5).toDouble();
+      final filteredResults =
+          response.where((place) {
+            final rating = place['rating'];
+            return rating != null && rating >= min && rating <= max;
+          }).toList();
+
+      final circleAvatar = Container(
+        width: 90,
+        height: 90,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: Color(AppColor.darker), width: 3),
+        ),
+        child: CircleAvatar(
+          backgroundColor: Colors.white,
+          radius: 40,
+          child: Icon(
+            getIconByName(originalPlaceTypePref["icon"]),
+            size: 40,
+            color: Color(
+              PlaceType.getColorByName(originalPlaceTypePref["name"]) as int,
+            ),
+          ),
+        ),
+      );
+
+      for (var result in filteredResults) {
         final name = result['name'];
         final lat = result['geometry']['location']['lat'];
         final lng = result['geometry']['location']['lng'];
-
-        /* final types = result['types'] as List<dynamic>;
-        final mainType = types.isNotEmpty ? types[0] : 'default';
-        final icon = await _getIconForType(mainType); */
-
-        _addMarker(LatLng(lat, lng), name);
+        _addMarker(LatLng(lat, lng), name, circleAvatar);
       }
     }
   }
 
-  void _addMarker(LatLng position, String name) {
+  Future<void> _addMarker(
+    LatLng position,
+    String name,
+    Container myCircleAvatar,
+  ) async {
+    final icon = await myCircleAvatar.toBitmapDescriptor(
+      logicalSize: const Size(80, 80),
+      imageSize: const Size(80, 80),
+    );
+
     setState(() {
       _markers.add(
         Marker(
           markerId: MarkerId(name),
           position: position,
+          icon: icon,
           infoWindow: InfoWindow(title: name),
         ),
       );
