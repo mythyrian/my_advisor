@@ -6,25 +6,33 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:toastification/toastification.dart';
 
-Future<List<dynamic>?> fetchNearbyPlaces(LatLngBounds bounds, type) async {
+Future<List<dynamic>?> fetchNearbyPlaces(
+  LatLngBounds bounds, {
+  String? type,
+  String? keyword,
+}) async {
   final String? apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
-  final String placeType = type;
 
   final centerLat = (bounds.northeast.latitude + bounds.southwest.latitude) / 2;
   final centerLng =
       (bounds.northeast.longitude + bounds.southwest.longitude) / 2;
-
   final radius = _calculateRadius(bounds);
 
-  final url = Uri.parse(
-    'https://maps.googleapis.com/maps/api/place/nearbysearch/json'
-    '?location=$centerLat,$centerLng'
-    '&radius=$radius'
-    '&type=$placeType'
-    '&key=$apiKey',
+  final queryParams = {
+    'location': '$centerLat,$centerLng',
+    'radius': '$radius',
+    'key': apiKey,
+    if (type != null && type.isNotEmpty) 'type': type,
+    if (keyword != null && keyword.isNotEmpty) 'keyword': keyword,
+  };
+
+  final uri = Uri.https(
+    'maps.googleapis.com',
+    '/maps/api/place/nearbysearch/json',
+    queryParams,
   );
 
-  final response = await http.get(url);
+  final response = await http.get(uri);
   final data = jsonDecode(response.body);
 
   if (data['status'] == 'OK') {
@@ -86,6 +94,45 @@ Future<Map<String, dynamic>?> fetchPlaceDetails(String placeId) async {
 String getImageUrl(String ref) {
   final String? apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
   return "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=$ref&key=$apiKey";
+}
+
+Future<List<dynamic>?> fetchNearbyPlacesByKeyword(
+  LatLngBounds bounds,
+  keyWord,
+) async {
+  final String? apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
+
+  final centerLat = (bounds.northeast.latitude + bounds.southwest.latitude) / 2;
+  final centerLng =
+      (bounds.northeast.longitude + bounds.southwest.longitude) / 2;
+
+  final radius = _calculateRadius(bounds);
+
+  final url = Uri.parse(
+    'https://maps.googleapis.com/maps/api/place/nearbysearch/json'
+    '?location=$centerLat,$centerLng'
+    '&radius=$radius'
+    '&keyword=$keyWord'
+    '&key=$apiKey',
+  );
+
+  final response = await http.get(url);
+  final data = jsonDecode(response.body);
+
+  if (data['status'] == 'OK') {
+    return data['results'];
+  } else {
+    toastification.show(
+      type: ToastificationType.error,
+      style: ToastificationStyle.fillColored,
+      title: Text('Errore Google API!'),
+      description: RichText(
+        text: TextSpan(text: "Errore Google API: ${data['status']}"),
+      ),
+      autoCloseDuration: const Duration(seconds: 3),
+    );
+    return null;
+  }
 }
 
 double _calculateRadius(LatLngBounds bounds) {

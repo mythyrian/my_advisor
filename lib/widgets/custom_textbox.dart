@@ -9,6 +9,7 @@ class CustomTextBox extends StatelessWidget {
     this.suffix,
     this.controller,
     this.readOnly = false,
+    this.onSubmitted,
   });
 
   final String hint;
@@ -16,6 +17,7 @@ class CustomTextBox extends StatelessWidget {
   final Widget? suffix;
   final bool readOnly;
   final TextEditingController? controller;
+  final ValueChanged<String>? onSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +34,14 @@ class CustomTextBox extends StatelessWidget {
             color: Color(AppColor.shadowColor).withOpacity(.05),
             spreadRadius: .5,
             blurRadius: .5,
-            offset: Offset(0, 1), // changes position of shadow
+            offset: Offset(0, 1),
           ),
         ],
       ),
       child: TextField(
         readOnly: readOnly,
         controller: controller,
+        onSubmitted: onSubmitted,
         decoration: InputDecoration(
           prefixIcon: prefix,
           suffixIcon: suffix,

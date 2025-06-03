@@ -13,6 +13,9 @@ class HiveStore {
     if (!_box.containsKey("range_reviw_pref")) {
       await _box.put("range_review_pref", {"min": 1.0, "max": 5.0});
     }
+    if (!_box.containsKey("search_keyword")) {
+      await _box.put("search_keyword", "");
+    }
   }
 
   /// Salva un valore con una chiave

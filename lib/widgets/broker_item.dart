@@ -54,25 +54,25 @@ class ReviewItem extends StatelessWidget {
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
             ),
             const SizedBox(width: 10),
-          Text(
-            data["relative_time_description"],
-            style: TextStyle(height: 1.5, color: Color(AppColor.darker)),
-          ),
+            Text(
+              data["relative_time_description"],
+              style: TextStyle(height: 1.5, color: Color(AppColor.darker)),
+            ),
           ],
         ),
       ],
     );
   }
 
-Widget _buildRate(int rating) {
-  return Row(
-    children: List.generate(5, (index) {
-      return Icon(
-        index < rating ? Icons.star : Icons.star_outline,
-        size: 16,
-        color: Color(AppColor.yellow),
-      );
-    }),
-  );
-}
+  Widget _buildRate(int rating) {
+    return Row(
+      children: List.generate(5, (index) {
+        return Icon(
+          index < rating ? Icons.star : Icons.star_outline,
+          size: 16,
+          color: Color(AppColor.yellow),
+        );
+      }),
+    );
+  }
 }

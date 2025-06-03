@@ -82,36 +82,64 @@ class _FilterDialogContentState extends State<FilterDialogContent> {
             const SizedBox(height: 20),
             Wrap(
               spacing: 10,
-              children:
-                  placeTypeWithCheck.map((type) {
-                    return ChoiceChip(
-                      label: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(type['label'] as String),
-                          const SizedBox(width: 6),
-                          CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 12,
-                            child: Icon(
-                              getIconByName(type['icon'] as String),
-                              size: 16,
-                              color: Color(type['color']),
-                            ),
+              children: [
+                ...placeTypeWithCheck.map((type) {
+                  return ChoiceChip(
+                    label: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(type['label'] as String),
+                        const SizedBox(width: 6),
+                        CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 12,
+                          child: Icon(
+                            getIconByName(type['icon'] as String),
+                            size: 16,
+                            color: Color(type['color']),
                           ),
-                        ],
+                        ),
+                      ],
+                    ),
+                    selected: type['name'] == placeTypeRef["name"],
+                    onSelected: (selected) {
+                      setState(() {
+                        placeTypeRef = type;
+                      });
+                    },
+                    selectedColor: Color(AppColor.primary),
+                    backgroundColor: Colors.grey.shade200,
+                    shape: const StadiumBorder(),
+                  );
+                }),
+                ChoiceChip(
+                  label: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text("clean"),
+                      const SizedBox(width: 6),
+                      CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 12,
+                        child: Icon(
+                          Icons.cleaning_services_outlined,
+                          size: 16,
+                          color: Color(AppColor.secondary),
+                        ),
                       ),
-                      selected: type['name'] == placeTypeRef["name"],
-                      onSelected: (selected) {
-                        setState(() {
-                          placeTypeRef = type;
-                        });
-                      },
-                      selectedColor: Color(AppColor.primary),
-                      backgroundColor: Colors.grey.shade200,
-                      shape: StadiumBorder(),
-                    );
-                  }).toList(),
+                    ],
+                  ),
+                  selected: false,
+                  onSelected: (selected) {
+                    setState(() {
+                      placeTypeRef = {};
+                    });
+                  },
+                  selectedColor: Color(AppColor.primary),
+                  backgroundColor: Colors.grey.shade200,
+                  shape: const StadiumBorder(),
+                ),
+              ],
             ),
 
             // Pulsanti

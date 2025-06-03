@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:my_advisor/constant/circle_avatar_default.dart';
 import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/utils/hive_store.dart';
 import 'package:my_advisor/utils/icon_service.dart';
 import 'package:my_advisor/utils/map_api.dart';
 import 'package:my_advisor/widgets/filter_dialog_content.dart';
+import 'package:my_advisor/widgets/my_search_bar.dart';
 import 'package:my_advisor/widgets/place_info.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:toastification/toastification.dart';
@@ -33,13 +35,14 @@ class _MyMapState extends State<MyMap> {
   void _onMapCreated(GoogleMapController controller) async {
     _controller.complete(controller);
     visibleRegion = await controller.getVisibleRegion();
-
-    /*final String style = await rootBundle.loadString('assets/map_style.json');
-    controller.setMapStyle(style);*/
   }
 
   final PanelController _panelController = PanelController();
   Map<String, dynamic>? _selectedPlace;
+
+  ValueNotifier<List<dynamic>> responseMarker = ValueNotifier([]);
+
+  List<Map> listCircleAvatar = [];
 
   @override
   void initState() {
@@ -52,6 +55,10 @@ class _MyMapState extends State<MyMap> {
       ),
     );
     _determinePosition();
+    genereteListCircleAvatar();
+    responseMarker.addListener(() {
+      _generateMarker();
+    });
   }
 
   Future<void> _determinePosition() async {
@@ -119,15 +126,13 @@ class _MyMapState extends State<MyMap> {
                 Align(
                   alignment: Alignment.topCenter,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 120, left: 40),
+                    padding: const EdgeInsets.only(top: 170, left: 40),
                     child: FloatingActionButton.extended(
                       heroTag: 'searchButton',
                       elevation: 0,
                       highlightElevation: 0,
                       onPressed: () async {
-                        final controller = await _controller.future;
-                        final bounds = await controller.getVisibleRegion();
-                        _fetchNearbyPlaces(bounds);
+                        _fetchNearbyPlaces();
                       },
                       backgroundColor: Color(AppColor.sky),
                       icon: const Icon(
@@ -138,6 +143,18 @@ class _MyMapState extends State<MyMap> {
                     ),
                   ),
                 ),
+
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 120, left: 40),
+                    child: MySearchBar(
+                      showFilter: false,
+                      search: _fetchNearbyPlaces,
+                    ),
+                  ),
+                ),
+
                 Positioned(
                   bottom: 125,
                   right: 0,
@@ -174,7 +191,7 @@ class _MyMapState extends State<MyMap> {
           SlidingUpPanel(
             controller: _panelController,
             minHeight: 0,
-            maxHeight: MediaQuery.of(context).size.height * 0.7,
+            maxHeight: MediaQuery.of(context).size.height * 0.71,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             panelSnapping: true, // assicura lo snap
             backdropEnabled:
@@ -238,10 +255,13 @@ class _MyMapState extends State<MyMap> {
     );
   }
 
-  Future<void> _fetchNearbyPlaces(LatLngBounds bounds) async {
+  Future<void> _fetchNearbyPlaces() async {
+    final controller = await _controller.future;
+    final bounds = await controller.getVisibleRegion();
     final originalPlaceTypePref = HiveStore.get("place_type_pref");
+    final keyWord = HiveStore.get("search_keyword");
 
-    if (originalPlaceTypePref == null || originalPlaceTypePref.isEmpty) {
+    if ((originalPlaceTypePref == null || originalPlaceTypePref.isEmpty) && keyWord == "") {
       toastification.show(
         type: ToastificationType.warning,
         style: ToastificationStyle.fillColored,
@@ -255,25 +275,65 @@ class _MyMapState extends State<MyMap> {
       );
       return;
     }
-
+    print(originalPlaceTypePref);
     final response = await fetchNearbyPlaces(
       bounds,
-      originalPlaceTypePref["name"],
+      type: originalPlaceTypePref["name"],
+      keyword: keyWord,
     );
 
     if (response != null) {
       setState(() {
+        responseMarker.value = response;
         _markers.clear();
       });
-      final rawRange = HiveStore.get("range_review_pref");
-      final min = (rawRange?["min"] ?? 1).toDouble();
-      final max = (rawRange?["max"] ?? 5).toDouble();
-      final filteredResults =
-          response.where((place) {
-            final rating = place['rating'];
-            return rating != null && rating >= min && rating <= max;
-          }).toList();
+    }
+  }
 
+  Future<void> _generateMarker() async {
+    final originalPlaceTypePref = HiveStore.get("place_type_pref");
+    final rawRange = HiveStore.get("range_review_pref");
+    final min = (rawRange?["min"] ?? 1).toDouble();
+    final max = (rawRange?["max"] ?? 5).toDouble();
+    final filteredResults =
+        responseMarker.value.where((place) {
+          final rating = place['rating'];
+          return rating != null && rating >= min && rating <= max;
+        }).toList();
+
+    for (var result in filteredResults) {
+      final name = result['name'];
+      final lat = result['geometry']['location']['lat'];
+      final lng = result['geometry']['location']['lng'];
+      List types = result['types'] ?? [];
+
+      Map circleAvatar = {};
+
+      if (originalPlaceTypePref.isEmpty) {
+        circleAvatar = listCircleAvatar.firstWhere(
+          (b) => types.any((a) => a == b['name']),
+          orElse: () => {"widget": circleAvatarDefault},
+        );
+      } else {
+        circleAvatar = listCircleAvatar.firstWhere(
+          (b) => b["name"] == originalPlaceTypePref["name"],
+          orElse: () => {"widget": circleAvatarDefault},
+        );
+      }
+
+      _addMarker(
+        LatLng(lat, lng),
+        name,
+        circleAvatar["widget"],
+        result["place_id"],
+      );
+    }
+  }
+
+  void genereteListCircleAvatar() {
+    List<Map> list = [];
+
+    for (var element in PlaceType.placeTypeList) {
       final circleAvatar = Container(
         width: 90,
         height: 90,
@@ -285,22 +345,21 @@ class _MyMapState extends State<MyMap> {
           backgroundColor: Colors.white,
           radius: 40,
           child: Icon(
-            getIconByName(originalPlaceTypePref["icon"]),
+            getIconByName(element["icon"] as String),
             size: 40,
             color: Color(
-              PlaceType.getColorByName(originalPlaceTypePref["name"]) as int,
+              PlaceType.getColorByName(element["name"] as String) as int,
             ),
           ),
         ),
       );
 
-      for (var result in filteredResults) {
-        final name = result['name'];
-        final lat = result['geometry']['location']['lat'];
-        final lng = result['geometry']['location']['lng'];
-        _addMarker(LatLng(lat, lng), name, circleAvatar, result["place_id"]);
-      }
+      list.add({"name": element["name"], "widget": circleAvatar});
     }
+
+    setState(() {
+      listCircleAvatar = list;
+    });
   }
 
   Future<void> _addMarker(
