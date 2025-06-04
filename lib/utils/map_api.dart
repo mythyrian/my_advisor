@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
@@ -133,6 +134,52 @@ Future<List<dynamic>?> fetchNearbyPlacesByKeyword(
     );
     return null;
   }
+}
+
+Future<List<dynamic>?> fetchNearbyPlacesShortRange() async {
+  final String? apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
+  final position = await _determinePosition();
+  final uri = Uri.parse(
+    'https://maps.googleapis.com/maps/api/place/nearbysearch/json'
+    '?location=${position.latitude},${position.longitude}'
+    '&radius=50'
+    '&key=$apiKey',
+  );
+
+  final response = await http.get(uri);
+  final data = jsonDecode(response.body);
+
+  if (data['status'] == 'OK') {
+    return data['results'];
+  } else {
+    toastification.show(
+      type: ToastificationType.error,
+      style: ToastificationStyle.fillColored,
+      title: Text('Errore Google API!'),
+      description: RichText(
+        text: TextSpan(text: "Errore Google API: ${data['status']}"),
+      ),
+      autoCloseDuration: const Duration(seconds: 3),
+    );
+    return null;
+  }
+}
+
+Future<Position> _determinePosition() async {
+  bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) throw Exception('GPS non attivo');
+
+  LocationPermission permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+  }
+  if (permission == LocationPermission.deniedForever) {
+    throw Exception('Permessi di posizione negati permanentemente');
+  }
+
+  return await Geolocator.getCurrentPosition(
+    desiredAccuracy: LocationAccuracy.high,
+  );
 }
 
 double _calculateRadius(LatLngBounds bounds) {

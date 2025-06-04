@@ -1,14 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-
-class LocalDatabaseStore {
+import 'package:toastification/toastification.dart';
 
 Future<File> _getJsonFile() async {
   final dir = await getApplicationDocumentsDirectory();
-  return File('${dir.path}/data.json');
+  return File('${dir.path}/local-database.json');
 }
-
 
 Future<dynamic> readValue(String key) async {
   final file = await _getJsonFile();
@@ -22,18 +21,26 @@ Future<dynamic> readValue(String key) async {
 }
 
 Future<void> writeValue(String key, dynamic value) async {
-  final file = await _getJsonFile();
+  try {
+    final file = await _getJsonFile();
+    Map<String, dynamic> data = {};
 
-  Map<String, dynamic> data = {};
+    if (await file.exists()) {
+      final contents = await file.readAsString();
+      data = json.decode(contents);
+    }
 
-  if (await file.exists()) {
-    final contents = await file.readAsString();
-    data = json.decode(contents);
+    data[key] = value;
+    await file.writeAsString(json.encode(data));
+  } catch (e) {
+    toastification.show(
+      type: ToastificationType.error,
+      style: ToastificationStyle.fillColored,
+      title: Text('Errore in writeValue!'),
+      description: RichText(text: TextSpan(text: "Errore in writeValue: $e")),
+      autoCloseDuration: const Duration(seconds: 3),
+    );
   }
-
-  data[key] = value;
-
-  await file.writeAsString(json.encode(data));
 }
 
 Future<void> deleteValue(String key) async {
@@ -49,4 +56,20 @@ Future<void> deleteValue(String key) async {
   await file.writeAsString(json.encode(data));
 }
 
+Future<void> appendToList(String key, dynamic newValue) async {
+  final file = await _getJsonFile();
+
+  Map<String, dynamic> data = {};
+
+  if (await file.exists()) {
+    final contents = await file.readAsString();
+    data = json.decode(contents);
+  }
+
+  List<dynamic> list = data[key] is List ? List.from(data[key]) : [];
+
+  list.add(newValue);
+
+  data[key] = list;
+  await file.writeAsString(json.encode(data));
 }

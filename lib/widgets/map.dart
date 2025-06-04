@@ -261,7 +261,8 @@ class _MyMapState extends State<MyMap> {
     final originalPlaceTypePref = HiveStore.get("place_type_pref");
     final keyWord = HiveStore.get("search_keyword");
 
-    if ((originalPlaceTypePref == null || originalPlaceTypePref.isEmpty) && keyWord == "") {
+    if ((originalPlaceTypePref == null || originalPlaceTypePref.isEmpty) &&
+        keyWord == "") {
       toastification.show(
         type: ToastificationType.warning,
         style: ToastificationStyle.fillColored,

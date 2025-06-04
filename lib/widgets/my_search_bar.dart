@@ -43,10 +43,10 @@ class _MySearchBarState extends State<MySearchBar> {
             const SizedBox(width: 10),
             widget.showFilter
                 ? IconBox(
-                    bgColor: Color(AppColor.secondary),
-                    radius: 10,
-                    child: Icon(Icons.filter_list_rounded, color: Colors.white),
-                  )
+                  bgColor: Color(AppColor.secondary),
+                  radius: 10,
+                  child: Icon(Icons.filter_list_rounded, color: Colors.white),
+                )
                 : Container(),
           ],
         ),
