@@ -18,13 +18,13 @@ class _RootAppState extends State<RootApp> {
 
   final List _barItems = [
     {
-      "icon": Icons.home_outlined,
-      "active_icon": Icons.home_rounded,
+      "icon": Icons.map_outlined,
+      "active_icon": Icons.map_rounded,
       "page": HomePage(),
     },
     {
-      "icon": Icons.search_outlined,
-      "active_icon": Icons.search,
+      "icon": Icons.rate_review_outlined,
+      "active_icon": Icons.rate_review_rounded,
       "page": ExplorePage(),
     },
     {
@@ -33,8 +33,8 @@ class _RootAppState extends State<RootApp> {
       "page": InfoPage(),
     },
     {
-      "icon": Icons.forum_outlined,
-      "active_icon": Icons.forum_rounded,
+      "icon": Icons.location_history_outlined,
+      "active_icon": Icons.location_history_rounded,
       "page": InfoPage(),
     },
     {
