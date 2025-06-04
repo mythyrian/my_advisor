@@ -29,12 +29,6 @@ class PropertyItem extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          CustomImage(
-            data["image"],
-            width: double.infinity,
-            height: 150,
-            radius: 25,
-          ),
           Positioned(right: 20, top: 130, child: _buildFavorite()),
           Positioned(left: 15, top: 160, child: _buildInfo()),
         ],
@@ -46,7 +40,7 @@ class PropertyItem extends StatelessWidget {
     return IconBox(
       bgColor: Color(AppColor.red),
       child: Icon(
-        data["is_favorited"] ? Icons.favorite : Icons.favorite_border,
+        Icons.favorite ,
         color: Colors.white,
         size: 20,
       ),
@@ -69,14 +63,14 @@ class PropertyItem extends StatelessWidget {
             Icon(Icons.place_outlined, color: Color(AppColor.darker), size: 13),
             const SizedBox(width: 3),
             Text(
-              data["location"],
+              data!["address"],
               style: TextStyle(fontSize: 13, color: Color(AppColor.darker)),
             ),
           ],
         ),
         const SizedBox(height: 5),
         Text(
-          data["price"],
+          data["timestamp"],
           style: TextStyle(
             fontSize: 15,
             color: Color(AppColor.primary),

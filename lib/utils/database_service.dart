@@ -63,13 +63,21 @@ Future<void> appendToList(String key, dynamic newValue) async {
 
   if (await file.exists()) {
     final contents = await file.readAsString();
-    data = json.decode(contents);
+
+    if (contents.trim().isNotEmpty) {
+      try {
+        data = json.decode(contents);
+      } catch (e) {
+        print("Errore di parsing JSON: $e");
+        data = {};
+      }
+    }
   }
 
-  List<dynamic> list = data[key] is List ? List.from(data[key]) : [];
-
+  final list = List.from(data[key] ?? []);
   list.add(newValue);
-
   data[key] = list;
+
   await file.writeAsString(json.encode(data));
 }
+

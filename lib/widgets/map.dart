@@ -276,7 +276,6 @@ class _MyMapState extends State<MyMap> {
       );
       return;
     }
-    print(originalPlaceTypePref);
     final response = await fetchNearbyPlaces(
       bounds,
       type: originalPlaceTypePref["name"],

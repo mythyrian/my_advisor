@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_advisor/utils/database_service.dart';
 import 'package:my_advisor/utils/map_api.dart';
 import 'package:my_advisor/widgets/broker_item.dart';
 
@@ -17,6 +18,34 @@ class PlaceInfo extends StatefulWidget {
 }
 
 class _PlaceInfoState extends State<PlaceInfo> {
+
+  @override
+   initState() {
+    super.initState();
+          final placeId = widget.placeData['place_id'];
+          final name = widget.placeData['name'];
+          final address = widget.placeData['vicinity'] ?? widget.placeData['formatted_address'] ?? '';
+          final location = widget.placeData['geometry']?['location'];
+          final lat = location?['lat'];
+          final lng = location?['lng'];
+
+          final photos =
+              (widget.placeData['photos'] as List?)
+                  ?.map((p) => p['photo_reference'])
+                  .toList() ??
+              [];
+
+           appendToList("placeVisited", {
+            'name': name,
+            'place_id': placeId,
+            'types': widget.placeData['type'],
+            'address': address,
+            'lat': lat,
+            'lng': lng,
+            'photos': photos,
+            'timestamp': DateTime.now().toIso8601String(),
+          });
+  }
   @override
   Widget build(BuildContext context) {
     final place = widget.placeData;
