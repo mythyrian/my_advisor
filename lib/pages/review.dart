@@ -105,33 +105,33 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-Future<Widget> _buildReviewed() async {
-  final places = await readValue("placeReviewed") as List<dynamic>;
-  late List<dynamic> filterPlaces;
+  Future<Widget> _buildReviewed() async {
+    final places = await readValue("placeReviewed") as List<dynamic>;
+    late List<dynamic> filterPlaces;
 
-  if (_selectedCategory == "all") {
-    filterPlaces = places;
-  } else {
-    filterPlaces = places.where((place) {
-      final types = List<String>.from(place["types"]);
-      return types.contains(_selectedCategory);
-    }).toList();
+    if (_selectedCategory == "all") {
+      filterPlaces = places;
+    } else {
+      filterPlaces =
+          places.where((place) {
+            final types = List<String>.from(place["types"]);
+            return types.contains(_selectedCategory);
+          }).toList();
+    }
+
+    return CarouselSlider(
+      options: CarouselOptions(
+        height: MediaQuery.of(context).size.height * 0.6,
+        enlargeCenterPage: true,
+        disableCenter: true,
+        viewportFraction: .55,
+        enableInfiniteScroll: false,
+        scrollDirection: Axis.vertical,
+      ),
+      items: List.generate(
+        filterPlaces.length,
+        (index) => PropertyItem(data: filterPlaces[index]),
+      ),
+    );
   }
-
-  return CarouselSlider(
-    options: CarouselOptions(
-      height: MediaQuery.of(context).size.height * 0.6,
-      enlargeCenterPage: true,
-      disableCenter: true,
-      viewportFraction: .55,
-      enableInfiniteScroll: false,
-      scrollDirection: Axis.vertical,
-    ),
-    items: List.generate(
-      filterPlaces.length,
-      (index) => PropertyItem(data: filterPlaces[index]),
-    ),
-  );
-}
-
 }
