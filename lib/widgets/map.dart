@@ -30,7 +30,7 @@ class _MyMapState extends State<MyMap> {
   final Completer<GoogleMapController> _controller = Completer();
 
   CameraPosition? _initialPosition;
-
+  Set<Polyline> polylinePointsMap = {};
   double initZoom = 14.5;
   LatLngBounds? visibleRegion;
   final Set<Marker> _markers = {};
@@ -153,21 +153,23 @@ class _MyMapState extends State<MyMap> {
                       ),
                     ),
 
-                Positioned(
-                  bottom: 125,
-                  right: 0,
-                  child: FloatingActionButton(
-                    heroTag: 'filterButton',
-                    onPressed: _openFilterList,
-                    elevation: 0,
-                    highlightElevation: 0,
-                    backgroundColor: Color(AppColor.sky),
-                    child: const Icon(
-                      Icons.tune,
-                      color: Color(AppColor.primary),
+                widget.mode == "history"
+                    ? Container()
+                    : Positioned(
+                      bottom: 125,
+                      right: 0,
+                      child: FloatingActionButton(
+                        heroTag: 'filterButton',
+                        onPressed: _openFilterList,
+                        elevation: 0,
+                        highlightElevation: 0,
+                        backgroundColor: Color(AppColor.sky),
+                        child: const Icon(
+                          Icons.tune,
+                          color: Color(AppColor.primary),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
                 Positioned(
                   bottom: 60,
                   right: 0,
@@ -189,7 +191,10 @@ class _MyMapState extends State<MyMap> {
           SlidingUpPanel(
             controller: _panelController,
             minHeight: 0,
-            maxHeight: widget.mode == "home" ? MediaQuery.of(context).size.height * 0.71 : MediaQuery.of(context).size.height * 0.5,
+            maxHeight:
+                widget.mode == "home"
+                    ? MediaQuery.of(context).size.height * 0.71
+                    : MediaQuery.of(context).size.height * 0.4,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             panelSnapping: true,
             backdropEnabled: true,
@@ -226,6 +231,7 @@ class _MyMapState extends State<MyMap> {
           myLocationEnabled: true,
           myLocationButtonEnabled: false,
           zoomControlsEnabled: false,
+          polylines: polylinePointsMap,
           onMapCreated: (GoogleMapController controller) async {
             _onMapCreated(controller);
           },
@@ -238,7 +244,11 @@ class _MyMapState extends State<MyMap> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return PlaceInfo(placeData: _selectedPlace!, scrollController: sc);
+    return PlaceInfo(
+      placeData: _selectedPlace!,
+      scrollController: sc,
+      mode: widget.mode,
+    );
   }
 
   void _openFilterList() {
@@ -345,11 +355,15 @@ class _MyMapState extends State<MyMap> {
   }
 
   Future<void> _generateMarkerHistory() async {
+    List<LatLng> polylinePoints = [];
+
     for (var result in widget.listHistoryPlaces!) {
       final name = result['name'];
       final lat = result['lat'];
       final lng = result['lng'];
       List types = result['types'] ?? [];
+
+      polylinePoints.add(LatLng(lat, lng));
 
       Map circleAvatar = {};
 
@@ -365,6 +379,19 @@ class _MyMapState extends State<MyMap> {
         result["place_id"],
       );
     }
+
+    Set<Polyline> polylines = {
+      Polyline(
+        polylineId: const PolylineId("route"),
+        color: Colors.blue,
+        width: 5,
+        points: polylinePoints,
+      ),
+    };
+
+    setState(() {
+      polylinePointsMap = polylines;
+    });
   }
 
   void genereteListCircleAvatar() {

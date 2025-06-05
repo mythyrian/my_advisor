@@ -56,6 +56,24 @@ Future<void> deleteValue(String key) async {
   await file.writeAsString(json.encode(data));
 }
 
+Future<void> deleteValueInList(String key, dynamic id) async {
+  final file = await _getJsonFile();
+
+  if (!(await file.exists())) return;
+
+  final contents = await file.readAsString();
+  final data = json.decode(contents);
+
+  if (data[key] is List) {
+    data[key] =
+        (data[key] as List).where((element) {
+          return element is Map && element['place_id'] != id;
+        }).toList();
+
+    await file.writeAsString(json.encode(data));
+  }
+}
+
 Future<void> appendToList(String key, dynamic newValue) async {
   final file = await _getJsonFile();
 

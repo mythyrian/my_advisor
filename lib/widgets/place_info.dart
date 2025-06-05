@@ -2,15 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:my_advisor/utils/database_service.dart';
 import 'package:my_advisor/utils/map_api.dart';
 import 'package:my_advisor/widgets/broker_item.dart';
+import 'package:my_advisor/widgets/review_form.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PlaceInfo extends StatefulWidget {
   final Map<String, dynamic> placeData;
   final ScrollController scrollController;
+  final String mode;
 
   const PlaceInfo({
     super.key,
     required this.placeData,
     required this.scrollController,
+    required this.mode,
   });
 
   @override
@@ -91,10 +95,12 @@ class _PlaceInfoState extends State<PlaceInfo> {
         const SizedBox(height: 8),
         Text("📞 ${place['formatted_phone_number'] ?? 'Non disponibile'}"),
         const SizedBox(height: 4),
-        Text("🌐 ${place['website'] ?? 'Non disponibile'}"),
+        link(place),
         const SizedBox(height: 12),
 
-        images.isNotEmpty
+        widget.mode == "history"
+            ? Container()
+            : images.isNotEmpty
             ? SizedBox(
               height: 100,
               child: ListView.separated(
@@ -121,33 +127,98 @@ class _PlaceInfoState extends State<PlaceInfo> {
               height: 100,
               child: Center(child: Text("No online image available")),
             ),
-        const SizedBox(height: 10),
-        SizedBox(height: 150, child: _buildReviewers()),
+        widget.mode == "history" ? Container() : const SizedBox(height: 10),
+        widget.mode == "history"
+            ? Container()
+            : SizedBox(height: 150, child: _buildReviewers()),
         const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton.icon(
-              onPressed: () async {
-                await openPlaceOnGoogleMaps(place['place_id']);
-              },
-              icon: const Icon(Icons.directions),
-              label: const Text("Indicazioni"),
+        widget.mode == "history"
+            ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    _openReviewForm();
+                  },
+                  icon: const Icon(Icons.edit_note),
+                  label: const Text("Add review"),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    await deleteValueInList("placeVisited", place['place_id']);
+                  },
+                  icon: const Icon(Icons.delete),
+                  label: const Text("Not been here"),
+                ),
+              ],
+            )
+            : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () async {
+                    await openPlaceOnGoogleMaps(place['place_id']);
+                  },
+                  icon: const Icon(Icons.directions),
+                  label: const Text("Indicazioni"),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    place['formatted_phone_number'] != null
+                        ? composePhoneNumber(place['formatted_phone_number'])
+                        : () => {};
+                  },
+                  icon: const Icon(Icons.call),
+                  label: const Text("Chiama"),
+                ),
+              ],
             ),
-            ElevatedButton.icon(
-              onPressed: () {
-              },
-              icon: const Icon(Icons.call),
-              label: const Text("Chiama"),
-            ),
-          ],
-        ),
       ],
     );
   }
 
+  void _openReviewForm() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child:  ReviewForm(place: widget.placeData),
+        );
+      },
+    );
+  }
 
+  Future<void> openWebsite(String urlStr) async {
+    final Uri url = Uri.parse(urlStr);
+    await launchUrl(url, mode: LaunchMode.externalApplication);
+  }
 
+  Widget link(place) {
+    final String? website = place['website'];
+    if (website != null && website.isNotEmpty) {
+      return InkWell(
+        onTap: () => openWebsite(place['website']),
+        child: Text(
+          "🌐 ${place['website']}",
+          style: TextStyle(
+            color: Colors.blue,
+            decoration: TextDecoration.underline,
+          ),
+        ),
+      );
+    } else {
+      return const Text("🌐 Non disponibile");
+    }
+  }
+
+  Future<void> composePhoneNumber(String phoneNumber) async {
+    final cleanedNumber = phoneNumber.replaceAll(' ', ''); // rimuove spazi
+    final Uri uri = Uri(scheme: 'tel', path: cleanedNumber);
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
 
   Widget _buildReviewers() {
     if (widget.placeData["reviews"] != null) {
@@ -156,7 +227,7 @@ class _PlaceInfoState extends State<PlaceInfo> {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: SizedBox(
-          height: 120, 
+          height: 120,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: reviews.length,

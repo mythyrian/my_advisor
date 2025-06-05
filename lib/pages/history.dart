@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/utils/data.dart';
 import 'package:my_advisor/utils/database_service.dart';
 import 'package:my_advisor/widgets/category_item.dart';
 import 'package:my_advisor/widgets/map.dart';
 import 'package:my_advisor/widgets/my_search_bar.dart';
-import 'package:my_advisor/widgets/recent_item.dart';
-import 'package:my_advisor/widgets/recommend_item.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});

@@ -183,21 +183,12 @@ Future<Position> _determinePosition() async {
   );
 }
 
-Future<void> openPlaceOnGoogleMaps(place, {
-  String? placeId
-}) async {
-  final position = await _determinePosition();
-  final lat = position.latitude;
-  final lng = position.longitude;
-  
+Future<void> openPlaceOnGoogleMaps(String? placeId) async {
   String url;
 
-  if (placeId != null) {
-    url = 'https://www.google.com/maps/search/?api=1&query=Google&query_place_id=$placeId';
-  } else {
-    url = 'https://www.google.com/maps/search/?api=1&query=$lat,$lng';
-  }
-   
+  url =
+      'https://www.google.com/maps/search/?api=1&query=Google&query_place_id=$placeId';
+
   if (await canLaunchUrl(Uri.parse(url))) {
     await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
   } else {

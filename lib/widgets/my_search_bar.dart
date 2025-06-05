@@ -22,6 +22,16 @@ class _MySearchBarState extends State<MySearchBar> {
   final TextEditingController _controller = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    setUp();
+  }
+
+  Future<void> setUp() async {
+    await HiveStore.put("search_keyword", " ");
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: 50,

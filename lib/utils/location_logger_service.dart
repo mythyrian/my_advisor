@@ -40,6 +40,7 @@ class LocationLoggerService {
             placeTypeDefList
                 .where((b) => place['types'].contains(b['name']))
                 .toList();
+
         if (matchedTypes != []) {
           final placeId = place['place_id'];
           final name = place['name'];
