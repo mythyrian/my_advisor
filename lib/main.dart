@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:my_advisor/utils/hive_store.dart';
 import 'package:my_advisor/utils/location_logger_service.dart';
@@ -8,10 +10,20 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:toastification/toastification.dart';
 import 'package:workmanager/workmanager.dart';
 
+@pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     await LocationLoggerService.runBackgroundTask();
     return Future.value(true);
+  });
+}
+
+Timer? _foregroundTimer;
+
+void startForegroundTracking() {
+  _foregroundTimer?.cancel();
+  _foregroundTimer = Timer.periodic(Duration(minutes: 15), (_) {
+    LocationLoggerService.runBackgroundTask();
   });
 }
 
@@ -23,11 +35,15 @@ Future<void> main() async {
 
   await dotenv.load(fileName: ".env");
 
-  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
-  Workmanager().registerPeriodicTask(
-    "uniqueName",
-    "backgroundLocationTask",
+  startForegroundTracking();
+
+  await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+
+  await Workmanager().registerPeriodicTask(
+    'log-location-task',
+    'logLocation',
     frequency: Duration(minutes: 15),
+    initialDelay: Duration(seconds: 10),
     constraints: Constraints(networkType: NetworkType.connected),
   );
 

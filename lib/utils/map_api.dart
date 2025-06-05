@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:toastification/toastification.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 Future<List<dynamic>?> fetchNearbyPlaces(
   LatLngBounds bounds, {
@@ -180,6 +181,28 @@ Future<Position> _determinePosition() async {
   return await Geolocator.getCurrentPosition(
     desiredAccuracy: LocationAccuracy.high,
   );
+}
+
+Future<void> openPlaceOnGoogleMaps(place, {
+  String? placeId
+}) async {
+  final position = await _determinePosition();
+  final lat = position.latitude;
+  final lng = position.longitude;
+  
+  String url;
+
+  if (placeId != null) {
+    url = 'https://www.google.com/maps/search/?api=1&query=Google&query_place_id=$placeId';
+  } else {
+    url = 'https://www.google.com/maps/search/?api=1&query=$lat,$lng';
+  }
+   
+  if (await canLaunchUrl(Uri.parse(url))) {
+    await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  } else {
+    throw 'Impossibile aprire Google Maps';
+  }
 }
 
 double _calculateRadius(LatLngBounds bounds) {

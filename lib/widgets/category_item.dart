@@ -20,10 +20,9 @@ class CategoryItem extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 500),
         curve: Curves.fastOutSlowIn,
-        padding: EdgeInsets.fromLTRB(5, 20, 5, 0),
         margin: EdgeInsets.only(right: 10),
         width: 90,
-        height: 90,
+        height: 40,
         decoration: BoxDecoration(
           color: selected ? Color(AppColor.primary) : Color(AppColor.cardColor),
           borderRadius: BorderRadius.circular(10),
@@ -36,26 +35,16 @@ class CategoryItem extends StatelessWidget {
             ),
           ],
         ),
-        child: Column(
-          children: [
-            Icon(
-              data["icon"],
-              size: 25,
-              color: selected ? Colors.white : Colors.black,
+        child: Center(
+          child: Text(
+            data["name"],
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 13,
+              color: selected ? Colors.white : Color(AppColor.darker),
             ),
-            const SizedBox(height: 5),
-            Expanded(
-              child: Text(
-                data["name"],
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 13,
-                  color: selected ? Colors.white : Color(AppColor.darker),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

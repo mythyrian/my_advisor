@@ -17,7 +17,10 @@ import 'package:my_advisor/constant/place_type.dart';
 import 'package:widget_to_marker/widget_to_marker.dart';
 
 class MyMap extends StatefulWidget {
-  const MyMap({super.key});
+  const MyMap({super.key, required this.mode, this.listHistoryPlaces});
+
+  final String mode;
+  final List<dynamic>? listHistoryPlaces;
 
   @override
   State<MyMap> createState() => _MyMapState();
@@ -59,6 +62,10 @@ class _MyMapState extends State<MyMap> {
     responseMarker.addListener(() {
       _generateMarker();
     });
+
+    if (widget.listHistoryPlaces != null) {
+      _generateMarkerHistory();
+    }
   }
 
   Future<void> _determinePosition() async {
@@ -103,57 +110,48 @@ class _MyMapState extends State<MyMap> {
       body: Stack(
         children: [
           Scaffold(
-            backgroundColor: Colors.white,
-            body: SafeArea(
-              child:
-                  _initialPosition == null
-                      ? const Center(child: CircularProgressIndicator())
-                      : GoogleMap(
-                        mapType: MapType.normal,
-                        initialCameraPosition: _initialPosition!,
-                        markers: _markers,
-                        myLocationEnabled: true,
-                        myLocationButtonEnabled: false,
-                        zoomControlsEnabled: false,
-                        onMapCreated: (GoogleMapController controller) async {
-                          _onMapCreated(controller);
-                        },
-                        onCameraIdle: () async {},
-                      ),
-            ),
+            backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
+            body:
+                widget.mode == "history"
+                    ? googleMap()
+                    : SafeArea(child: googleMap()),
             floatingActionButton: Stack(
               children: [
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 170, left: 40),
-                    child: FloatingActionButton.extended(
-                      heroTag: 'searchButton',
-                      elevation: 0,
-                      highlightElevation: 0,
-                      onPressed: () async {
-                        _fetchNearbyPlaces();
-                      },
-                      backgroundColor: Color(AppColor.sky),
-                      icon: const Icon(
-                        Icons.search,
-                        color: Color(AppColor.primary),
+                widget.mode == "history"
+                    ? Container()
+                    : Align(
+                      alignment: Alignment.topCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 170, left: 40),
+                        child: FloatingActionButton.extended(
+                          heroTag: 'searchButton',
+                          elevation: 0,
+                          highlightElevation: 0,
+                          onPressed: () async {
+                            _fetchNearbyPlaces();
+                          },
+                          backgroundColor: Color(AppColor.sky),
+                          icon: const Icon(
+                            Icons.search,
+                            color: Color(AppColor.primary),
+                          ),
+                          label: const Text("Search by filter"),
+                        ),
                       ),
-                      label: const Text("Search by filter"),
                     ),
-                  ),
-                ),
 
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 120, left: 40),
-                    child: MySearchBar(
-                      showFilter: false,
-                      search: _fetchNearbyPlaces,
+                widget.mode == "history"
+                    ? Container()
+                    : Align(
+                      alignment: Alignment.topCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 120, left: 40),
+                        child: MySearchBar(
+                          showFilter: false,
+                          search: _fetchNearbyPlaces,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
 
                 Positioned(
                   bottom: 125,
@@ -191,11 +189,10 @@ class _MyMapState extends State<MyMap> {
           SlidingUpPanel(
             controller: _panelController,
             minHeight: 0,
-            maxHeight: MediaQuery.of(context).size.height * 0.71,
+            maxHeight: widget.mode == "home" ? MediaQuery.of(context).size.height * 0.71 : MediaQuery.of(context).size.height * 0.5,
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-            panelSnapping: true, // assicura lo snap
-            backdropEnabled:
-                true, // permette di interagire meglio con tutta l'area
+            panelSnapping: true,
+            backdropEnabled: true,
             panelBuilder:
                 (ScrollController sc) => GestureDetector(
                   behavior: HitTestBehavior.opaque,
@@ -217,6 +214,23 @@ class _MyMapState extends State<MyMap> {
         ],
       ),
     );
+  }
+
+  Widget googleMap() {
+    return _initialPosition == null
+        ? const Center(child: CircularProgressIndicator())
+        : GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition: _initialPosition!,
+          markers: _markers,
+          myLocationEnabled: true,
+          myLocationButtonEnabled: false,
+          zoomControlsEnabled: false,
+          onMapCreated: (GoogleMapController controller) async {
+            _onMapCreated(controller);
+          },
+          onCameraIdle: () async {},
+        );
   }
 
   Widget _buildPlacePanel(ScrollController sc) {
@@ -320,6 +334,29 @@ class _MyMapState extends State<MyMap> {
           orElse: () => {"widget": circleAvatarDefault},
         );
       }
+
+      _addMarker(
+        LatLng(lat, lng),
+        name,
+        circleAvatar["widget"],
+        result["place_id"],
+      );
+    }
+  }
+
+  Future<void> _generateMarkerHistory() async {
+    for (var result in widget.listHistoryPlaces!) {
+      final name = result['name'];
+      final lat = result['lat'];
+      final lng = result['lng'];
+      List types = result['types'] ?? [];
+
+      Map circleAvatar = {};
+
+      circleAvatar = listCircleAvatar.firstWhere(
+        (b) => types.any((a) => a == b['name']),
+        orElse: () => {"widget": circleAvatarDefault},
+      );
 
       _addMarker(
         LatLng(lat, lng),

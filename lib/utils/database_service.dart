@@ -68,7 +68,15 @@ Future<void> appendToList(String key, dynamic newValue) async {
       try {
         data = json.decode(contents);
       } catch (e) {
-        print("Errore di parsing JSON: $e");
+        toastification.show(
+          type: ToastificationType.error,
+          style: ToastificationStyle.fillColored,
+          title: Text('Errore in json.decode!'),
+          description: RichText(
+            text: TextSpan(text: "Errore in json.decode: $e"),
+          ),
+          autoCloseDuration: const Duration(seconds: 3),
+        );
         data = {};
       }
     }
@@ -80,4 +88,3 @@ Future<void> appendToList(String key, dynamic newValue) async {
 
   await file.writeAsString(json.encode(data));
 }
-

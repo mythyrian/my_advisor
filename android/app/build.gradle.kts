@@ -17,7 +17,7 @@ val googleMapsApiKey: String? = localProperties.getProperty("googleMapsApiKey")
 android {
     namespace = "com.example.my_advisor"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

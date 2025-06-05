@@ -39,11 +39,7 @@ class PropertyItem extends StatelessWidget {
   Widget _buildFavorite() {
     return IconBox(
       bgColor: Color(AppColor.red),
-      child: Icon(
-        Icons.favorite ,
-        color: Colors.white,
-        size: 20,
-      ),
+      child: Icon(Icons.favorite, color: Colors.white, size: 20),
     );
   }
 

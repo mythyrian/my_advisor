@@ -18,34 +18,37 @@ class PlaceInfo extends StatefulWidget {
 }
 
 class _PlaceInfoState extends State<PlaceInfo> {
-
   @override
-   initState() {
+  initState() {
     super.initState();
-          final placeId = widget.placeData['place_id'];
-          final name = widget.placeData['name'];
-          final address = widget.placeData['vicinity'] ?? widget.placeData['formatted_address'] ?? '';
-          final location = widget.placeData['geometry']?['location'];
-          final lat = location?['lat'];
-          final lng = location?['lng'];
+    final placeId = widget.placeData['place_id'];
+    final name = widget.placeData['name'];
+    final address =
+        widget.placeData['vicinity'] ??
+        widget.placeData['formatted_address'] ??
+        '';
+    final location = widget.placeData['geometry']?['location'];
+    final lat = location?['lat'];
+    final lng = location?['lng'];
 
-          final photos =
-              (widget.placeData['photos'] as List?)
-                  ?.map((p) => p['photo_reference'])
-                  .toList() ??
-              [];
+    final photos =
+        (widget.placeData['photos'] as List?)
+            ?.map((p) => p['photo_reference'])
+            .toList() ??
+        [];
 
-           appendToList("placeVisited", {
-            'name': name,
-            'place_id': placeId,
-            'types': widget.placeData['type'],
-            'address': address,
-            'lat': lat,
-            'lng': lng,
-            'photos': photos,
-            'timestamp': DateTime.now().toIso8601String(),
-          });
+    appendToList("placeVisited", {
+      'name': name,
+      'place_id': placeId,
+      'types': widget.placeData['type'],
+      'address': address,
+      'lat': lat,
+      'lng': lng,
+      'photos': photos,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
   }
+
   @override
   Widget build(BuildContext context) {
     final place = widget.placeData;
@@ -125,16 +128,14 @@ class _PlaceInfoState extends State<PlaceInfo> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ElevatedButton.icon(
-              onPressed: () {
-                final url = place['url'];
-                // Usa url_launcher per aprire Maps
+              onPressed: () async {
+                await openPlaceOnGoogleMaps(place['place_id']);
               },
               icon: const Icon(Icons.directions),
               label: const Text("Indicazioni"),
             ),
             ElevatedButton.icon(
               onPressed: () {
-                // Usa url_launcher per chiamare
               },
               icon: const Icon(Icons.call),
               label: const Text("Chiama"),
@@ -145,22 +146,29 @@ class _PlaceInfoState extends State<PlaceInfo> {
     );
   }
 
-  Widget _buildReviewers() {
-    final reviews = widget.placeData["reviews"] as List;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: SizedBox(
-        height: 120, // altezza fissa per le card delle recensioni
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemCount: reviews.length,
-          separatorBuilder: (_, __) => const SizedBox(width: 10),
-          itemBuilder: (context, index) {
-            return ReviewItem(data: reviews[index]);
-          },
+
+
+  Widget _buildReviewers() {
+    if (widget.placeData["reviews"] != null) {
+      final reviews = widget.placeData["reviews"] as List;
+
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        child: SizedBox(
+          height: 120, 
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: reviews.length,
+            separatorBuilder: (_, __) => const SizedBox(width: 10),
+            itemBuilder: (context, index) {
+              return ReviewItem(data: reviews[index]);
+            },
+          ),
         ),
-      ),
-    );
+      );
+    }
+
+    return Container();
   }
 }

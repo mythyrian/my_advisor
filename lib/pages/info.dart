@@ -26,56 +26,55 @@ class _InfoPageState extends State<InfoPage> {
           pinned: true,
           snap: true,
           floating: true,
-          title: MySearchBar(showFilter: true, search: () => {},),
+          title: MySearchBar(showFilter: true, search: () => {}),
         ),
         SliverToBoxAdapter(child: _buildBody()),
       ],
     );
   }
 
- Widget _buildBody() {
-  return SingleChildScrollView(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 15),
-        _buildCategories(),
-        const SizedBox(height: 20),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
-                "Popular",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-              ),
-              Text(
-                "See all",
-                style: TextStyle(fontSize: 14, color: Color(AppColor.darker)),
-              ),
-            ],
+  Widget _buildBody() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 15),
+          _buildCategories(),
+          const SizedBox(height: 20),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: const [
+                Text(
+                  "Popular",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  "See all",
+                  style: TextStyle(fontSize: 14, color: Color(AppColor.darker)),
+                ),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 20),
-        FutureBuilder<Widget>(
-          future: _buildPopulars(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Errore nel caricamento'));
-            } else {
-              return snapshot.data!;
-            }
-          },
-        ),
-        // … il resto invariato
-      ],
-    ),
-  );
-}
-
+          const SizedBox(height: 20),
+          FutureBuilder<Widget>(
+            future: _buildPopulars(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Errore nel caricamento'));
+              } else {
+                return snapshot.data!;
+              }
+            },
+          ),
+          // … il resto invariato
+        ],
+      ),
+    );
+  }
 
   int _selectedCategory = 0;
   Widget _buildCategories() {
@@ -99,7 +98,6 @@ class _InfoPageState extends State<InfoPage> {
   }
 
   Future<Widget> _buildPopulars() async {
-
     final places = await readValue("placeVisited") as List<dynamic>;
 
     return CarouselSlider(

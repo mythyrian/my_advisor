@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_advisor/pages/explore.dart';
+import 'package:my_advisor/pages/history.dart';
 import 'package:my_advisor/pages/info.dart';
 import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/widgets/bottombar_item.dart';
@@ -35,7 +36,7 @@ class _RootAppState extends State<RootApp> {
     {
       "icon": Icons.location_history_outlined,
       "active_icon": Icons.location_history_rounded,
-      "page": InfoPage(),
+      "page": HistoryPage(),
     },
     {
       "icon": Icons.settings_outlined,
