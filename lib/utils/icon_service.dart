@@ -18,6 +18,8 @@ IconData getIconByName(String name) {
       return Icons.attractions;
     case 'theaters':
       return Icons.theaters;
+    case 'all':
+      return Icons.all_inclusive_outlined;
     default:
       return Icons.place;
   }

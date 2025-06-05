@@ -350,6 +350,7 @@ class _MyMapState extends State<MyMap> {
         name,
         circleAvatar["widget"],
         result["place_id"],
+        {},
       );
     }
   }
@@ -377,6 +378,7 @@ class _MyMapState extends State<MyMap> {
         name,
         circleAvatar["widget"],
         result["place_id"],
+        result,
       );
     }
 
@@ -431,6 +433,7 @@ class _MyMapState extends State<MyMap> {
     String name,
     Container myCircleAvatar,
     String placeId,
+    Map<String, dynamic>? info,
   ) async {
     final icon = await myCircleAvatar.toBitmapDescriptor(
       logicalSize: const Size(80, 80),
@@ -445,7 +448,12 @@ class _MyMapState extends State<MyMap> {
           icon: icon,
           infoWindow: InfoWindow(title: name),
           onTap: () async {
-            final response = await fetchPlaceDetails(placeId);
+            var response;
+            if (info != {}) {
+              response = info;
+            } else {
+              response = await fetchPlaceDetails(placeId);
+            }
             setState(() {
               _selectedPlace = response;
             });

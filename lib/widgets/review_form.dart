@@ -26,8 +26,8 @@ class _ReviewFormState extends State<ReviewForm> {
     setState(() {
       selectedImages = pickedFiles.map((file) => File(file.path)).toList();
     });
-    }
-  
+  }
+
   @override
   void initState() {
     super.initState();
@@ -127,9 +127,11 @@ class _ReviewFormState extends State<ReviewForm> {
               ),
               ElevatedButton(
                 onPressed: () async {
+                  print(place);
                   place["my_rating"] = rating;
                   place["my_comment"] = _reviewController.text;
-                  place["my_images"] = selectedImages.map((f) => f.path).toList();
+                  place["my_images"] =
+                      selectedImages.map((f) => f.path).toList();
                   await appendToList("placeReviewed", place);
                   Navigator.of(context).pop();
                 },

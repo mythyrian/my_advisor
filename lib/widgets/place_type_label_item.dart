@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/color.dart';
+import 'package:my_advisor/utils/icon_service.dart';
 
-class CompanyItem extends StatelessWidget {
-  const CompanyItem({
+class PlaceTypeLabelItem extends StatelessWidget {
+  const PlaceTypeLabelItem({
     super.key,
     required this.data,
     this.bgColor = Colors.white,
@@ -39,7 +40,7 @@ class CompanyItem extends StatelessWidget {
           ],
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
               padding: EdgeInsets.all(7),
@@ -47,20 +48,16 @@ class CompanyItem extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: color.withOpacity(.3),
               ),
-              child: Icon(data["icon"], color: color),
+              child: Icon(
+                getIconByName(data['icon'] as String),
+                size: 16,
+                color: Color(data['color']),
+              ),
             ),
-            const SizedBox(height: 8),
             Text(
-              data["name"],
+              data["label"],
               maxLines: 1,
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(height: 5),
-            Expanded(
-              child: Text(
-                data["type"],
-                style: TextStyle(fontSize: 12, color: Color(AppColor.darker)),
-              ),
             ),
             Visibility(
               visible: selected,

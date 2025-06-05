@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/utils/data.dart';
 import 'package:my_advisor/widgets/broker_item.dart';
-import 'package:my_advisor/widgets/company_item.dart';
+import 'package:my_advisor/widgets/place_type_label_item.dart';
 import 'package:my_advisor/widgets/custom_textbox.dart';
 import 'package:my_advisor/widgets/icon_box.dart';
 import 'package:my_advisor/widgets/recommend_item.dart';
@@ -100,7 +100,7 @@ class _ExplorePageState extends State<ExplorePage> {
   _buildCompanies() {
     List<Widget> lists = List.generate(
       companies.length,
-      (index) => CompanyItem(
+      (index) => PlaceTypeLabelItem(
         data: companies[index],
         color: Color(AppColor.listColors[index % 10]),
         selected: index == _selectedCategory,

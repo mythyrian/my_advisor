@@ -10,14 +10,25 @@ Future<File> _getJsonFile() async {
 }
 
 Future<dynamic> readValue(String key) async {
-  final file = await _getJsonFile();
+  print("Stiamo leggendo");
+  try {
+    final file = await _getJsonFile();
 
-  if (!(await file.exists())) return null;
+    if (!(await file.exists())) return [];
 
-  final contents = await file.readAsString();
-  final data = json.decode(contents);
-
-  return data[key];
+    final contents = await file.readAsString();
+    final data = json.decode(contents);
+    print(data[key]);
+    return data[key];
+  } catch (e) {
+    toastification.show(
+      type: ToastificationType.error,
+      style: ToastificationStyle.fillColored,
+      title: Text('Errore in writeValue!'),
+      description: RichText(text: TextSpan(text: "Errore in writeValue: $e")),
+      autoCloseDuration: const Duration(seconds: 3),
+    );
+  }
 }
 
 Future<void> writeValue(String key, dynamic value) async {
@@ -75,6 +86,8 @@ Future<void> deleteValueInList(String key, dynamic id) async {
 }
 
 Future<void> appendToList(String key, dynamic newValue) async {
+  print("stiamo aggiungendo");
+  print(newValue);
   final file = await _getJsonFile();
 
   Map<String, dynamic> data = {};

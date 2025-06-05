@@ -40,6 +40,16 @@ class _PlaceInfoState extends State<PlaceInfo> {
             ?.map((p) => p['photo_reference'])
             .toList() ??
         [];
+    print("aperto questo");
+    print({
+      'name': name,
+      'place_id': placeId,
+      'types': widget.placeData['types'],
+      'address': address,
+      'lat': lat,
+      'lng': lng,
+      'timestamp': DateTime.now().toIso8601String(),
+    });
 
     appendToList("placeVisited", {
       'name': name,
@@ -185,7 +195,7 @@ class _PlaceInfoState extends State<PlaceInfo> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          child:  ReviewForm(place: widget.placeData),
+          child: ReviewForm(place: widget.placeData),
         );
       },
     );

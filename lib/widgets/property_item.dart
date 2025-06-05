@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/color.dart';
-
-import 'custom_image.dart';
 import 'icon_box.dart';
 
 class PropertyItem extends StatelessWidget {
@@ -59,14 +57,14 @@ class PropertyItem extends StatelessWidget {
             Icon(Icons.place_outlined, color: Color(AppColor.darker), size: 13),
             const SizedBox(width: 3),
             Text(
-              data!["address"],
+              "adress",
               style: TextStyle(fontSize: 13, color: Color(AppColor.darker)),
             ),
           ],
         ),
         const SizedBox(height: 5),
         Text(
-          data["timestamp"],
+          "time",
           style: TextStyle(
             fontSize: 15,
             color: Color(AppColor.primary),

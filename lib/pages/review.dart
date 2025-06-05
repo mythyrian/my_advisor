@@ -1,22 +1,24 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/color.dart';
+import 'package:my_advisor/constant/place_type.dart';
 import 'package:my_advisor/utils/data.dart';
 import 'package:my_advisor/utils/database_service.dart';
 import 'package:my_advisor/widgets/category_item.dart';
+import 'package:my_advisor/widgets/place_type_label_item.dart';
 import 'package:my_advisor/widgets/my_search_bar.dart';
 import 'package:my_advisor/widgets/property_item.dart';
 import 'package:my_advisor/widgets/recent_item.dart';
 import 'package:my_advisor/widgets/recommend_item.dart';
 
-class InfoPage extends StatefulWidget {
-  const InfoPage({super.key});
+class ReviewPage extends StatefulWidget {
+  const ReviewPage({super.key});
 
   @override
-  _InfoPageState createState() => _InfoPageState();
+  _ReviewPageState createState() => _ReviewPageState();
 }
 
-class _InfoPageState extends State<InfoPage> {
+class _ReviewPageState extends State<ReviewPage> {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -26,7 +28,7 @@ class _InfoPageState extends State<InfoPage> {
           pinned: true,
           snap: true,
           floating: true,
-          title: MySearchBar(showFilter: true, search: () => {}),
+          title: MySearchBar(showFilter: false, search: () => {}),
         ),
         SliverToBoxAdapter(child: _buildBody()),
       ],
@@ -43,18 +45,9 @@ class _InfoPageState extends State<InfoPage> {
           const SizedBox(height: 20),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: const [
-                Text(
-                  "Popular",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                ),
-                Text(
-                  "See all",
-                  style: TextStyle(fontSize: 14, color: Color(AppColor.darker)),
-                ),
-              ],
+            child: Text(
+              "Reviewed",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
           ),
           const SizedBox(height: 20),
@@ -76,24 +69,44 @@ class _InfoPageState extends State<InfoPage> {
     );
   }
 
-  int _selectedCategory = 0;
+  String _selectedCategory = "all";
+
   Widget _buildCategories() {
+    final data = PlaceType.placeTypeList;
     List<Widget> lists = List.generate(
-      categories.length,
-      (index) => CategoryItem(
-        data: categories[index],
-        selected: index == _selectedCategory,
+      data.length,
+      (index) => PlaceTypeLabelItem(
+        data: data[index],
+        color: Color(data[index]['color'] as int),
+        selected: data[index]["name"] == _selectedCategory,
         onTap: () {
           setState(() {
-            _selectedCategory = index;
+            _selectedCategory = data[index]["name"] as String;
           });
         },
       ),
     );
+
+    Widget allItem = PlaceTypeLabelItem(
+      data: {
+        'name': 'all',
+        'label': 'All',
+        'color': AppColor.darker,
+        'icon': "all",
+      },
+      color: Color(AppColor.darker),
+      selected: _selectedCategory == "all",
+      onTap: () {
+        setState(() {
+          _selectedCategory = "all";
+        });
+      },
+    );
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: EdgeInsets.only(bottom: 5, left: 15),
-      child: Row(children: lists),
+      child: Row(children: [allItem, ...lists]),
     );
   }
 
@@ -111,32 +124,6 @@ class _InfoPageState extends State<InfoPage> {
         places.length,
         (index) => PropertyItem(data: places[index]),
       ),
-    );
-  }
-
-  Widget _buildRecommended() {
-    List<Widget> lists = List.generate(
-      recommended.length,
-      (index) => RecommendItem(data: recommended[index]),
-    );
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: EdgeInsets.only(bottom: 5, left: 15),
-      child: Row(children: lists),
-    );
-  }
-
-  Widget _buildRecent() {
-    List<Widget> lists = List.generate(
-      recents.length,
-      (index) => RecentItem(data: recents[index]),
-    );
-
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: EdgeInsets.only(bottom: 5, left: 15),
-      child: Row(children: lists),
     );
   }
 }
