@@ -25,42 +25,39 @@ class _PlaceInfoState extends State<PlaceInfo> {
   @override
   initState() {
     super.initState();
-    final placeId = widget.placeData['place_id'];
-    final name = widget.placeData['name'];
-    final address =
-        widget.placeData['vicinity'] ??
-        widget.placeData['formatted_address'] ??
-        '';
-    final location = widget.placeData['geometry']?['location'];
-    final lat = location?['lat'];
-    final lng = location?['lng'];
 
-    final photos =
-        (widget.placeData['photos'] as List?)
-            ?.map((p) => p['photo_reference'])
-            .toList() ??
-        [];
-    print("aperto questo");
-    print({
-      'name': name,
-      'place_id': placeId,
-      'types': widget.placeData['types'],
-      'address': address,
-      'lat': lat,
-      'lng': lng,
-      'timestamp': DateTime.now().toIso8601String(),
-    });
+    if (widget.mode == "home") {
+      final placeId = widget.placeData['place_id'];
+      final name = widget.placeData['name'];
+      final address =
+          widget.placeData['vicinity'] ??
+          widget.placeData['formatted_address'] ??
+          '';
+      final location = widget.placeData['geometry']?['location'];
+      final lat = location?['lat'];
+      final lng = location?['lng'];
 
-    appendToList("placeVisited", {
-      'name': name,
-      'place_id': placeId,
-      'types': widget.placeData['type'],
-      'address': address,
-      'lat': lat,
-      'lng': lng,
-      'photos': photos,
-      'timestamp': DateTime.now().toIso8601String(),
-    });
+      final photos =
+          (widget.placeData['photos'] as List?)
+              ?.map((p) => p['photo_reference'])
+              .toList() ??
+          [];
+
+      appendToList("placeVisited", {
+        'name': name,
+        'place_id': placeId,
+        'types': widget.placeData['types'],
+        'formatted_address': address,
+        'lat': lat,
+        'lng': lng,
+        'photos': photos,
+        'timestamp': DateTime.now().toIso8601String(),
+        'formatted_phone_number': widget.placeData['formatted_phone_number'],
+        'rating': widget.placeData['rating'],
+        'user_ratings_total': widget.placeData['user_ratings_total'],
+        'website': widget.placeData['website'],
+      });
+    }
   }
 
   @override

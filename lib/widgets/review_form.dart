@@ -13,7 +13,7 @@ class ReviewForm extends StatefulWidget {
 }
 
 class _ReviewFormState extends State<ReviewForm> {
-  double rating = 3;
+  int rating = 3;
   final TextEditingController _reviewController = TextEditingController();
   List<File> selectedImages = [];
 
@@ -53,8 +53,8 @@ class _ReviewFormState extends State<ReviewForm> {
               Text("${rating.toInt()} ⭐"),
               Expanded(
                 child: Slider(
-                  value: rating,
-                  onChanged: (value) => setState(() => rating = value),
+                  value: rating.toDouble(),
+                  onChanged: (value) => setState(() => rating = value.round()),
                   min: 1,
                   max: 5,
                   divisions: 4,
@@ -127,7 +127,6 @@ class _ReviewFormState extends State<ReviewForm> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  print(place);
                   place["my_rating"] = rating;
                   place["my_comment"] = _reviewController.text;
                   place["my_images"] =

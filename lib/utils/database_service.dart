@@ -10,7 +10,6 @@ Future<File> _getJsonFile() async {
 }
 
 Future<dynamic> readValue(String key) async {
-  print("Stiamo leggendo");
   try {
     final file = await _getJsonFile();
 
@@ -18,7 +17,6 @@ Future<dynamic> readValue(String key) async {
 
     final contents = await file.readAsString();
     final data = json.decode(contents);
-    print(data[key]);
     return data[key];
   } catch (e) {
     toastification.show(
@@ -86,8 +84,6 @@ Future<void> deleteValueInList(String key, dynamic id) async {
 }
 
 Future<void> appendToList(String key, dynamic newValue) async {
-  print("stiamo aggiungendo");
-  print(newValue);
   final file = await _getJsonFile();
 
   Map<String, dynamic> data = {};

@@ -2,14 +2,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/constant/place_type.dart';
-import 'package:my_advisor/utils/data.dart';
 import 'package:my_advisor/utils/database_service.dart';
-import 'package:my_advisor/widgets/category_item.dart';
 import 'package:my_advisor/widgets/place_type_label_item.dart';
 import 'package:my_advisor/widgets/my_search_bar.dart';
 import 'package:my_advisor/widgets/property_item.dart';
-import 'package:my_advisor/widgets/recent_item.dart';
-import 'package:my_advisor/widgets/recommend_item.dart';
 
 class ReviewPage extends StatefulWidget {
   const ReviewPage({super.key});
@@ -52,7 +48,7 @@ class _ReviewPageState extends State<ReviewPage> {
           ),
           const SizedBox(height: 20),
           FutureBuilder<Widget>(
-            future: _buildPopulars(),
+            future: _buildReviewed(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -63,7 +59,6 @@ class _ReviewPageState extends State<ReviewPage> {
               }
             },
           ),
-          // … il resto invariato
         ],
       ),
     );
@@ -110,20 +105,33 @@ class _ReviewPageState extends State<ReviewPage> {
     );
   }
 
-  Future<Widget> _buildPopulars() async {
-    final places = await readValue("placeVisited") as List<dynamic>;
+Future<Widget> _buildReviewed() async {
+  final places = await readValue("placeReviewed") as List<dynamic>;
+  late List<dynamic> filterPlaces;
 
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: 240,
-        enlargeCenterPage: true,
-        disableCenter: true,
-        viewportFraction: .8,
-      ),
-      items: List.generate(
-        places.length,
-        (index) => PropertyItem(data: places[index]),
-      ),
-    );
+  if (_selectedCategory == "all") {
+    filterPlaces = places;
+  } else {
+    filterPlaces = places.where((place) {
+      final types = List<String>.from(place["types"]);
+      return types.contains(_selectedCategory);
+    }).toList();
   }
+
+  return CarouselSlider(
+    options: CarouselOptions(
+      height: MediaQuery.of(context).size.height * 0.6,
+      enlargeCenterPage: true,
+      disableCenter: true,
+      viewportFraction: .55,
+      enableInfiniteScroll: false,
+      scrollDirection: Axis.vertical,
+    ),
+    items: List.generate(
+      filterPlaces.length,
+      (index) => PropertyItem(data: filterPlaces[index]),
+    ),
+  );
+}
+
 }

@@ -59,11 +59,15 @@ class LocationLoggerService {
             'name': name,
             'place_id': placeId,
             'types': matchedTypes,
-            'address': address,
+            'formatted_address': address,
             'lat': lat,
             'lng': lng,
             'photos': photos,
             'timestamp': DateTime.now().toIso8601String(),
+            'formatted_phone_number': place['formatted_phone_number'],
+            'rating': place['rating'],
+            'user_ratings_total': place['user_ratings_total'],
+            'website': place['website'],
           });
         }
       }

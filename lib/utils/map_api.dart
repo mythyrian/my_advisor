@@ -13,6 +13,19 @@ Future<List<dynamic>?> fetchNearbyPlaces(
   String? type,
   String? keyword,
 }) async {
+  if ((keyword == null || keyword == " ") && (type == null || type == "")) {
+    toastification.show(
+      type: ToastificationType.warning,
+      style: ToastificationStyle.fillColored,
+      title: Text('No Text Search or Filter!'),
+      description: RichText(
+        text: TextSpan(text: "please insert keyword for search or add filter"),
+      ),
+      autoCloseDuration: const Duration(seconds: 3),
+    );
+    return null;
+  }
+
   final String? apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'];
 
   final centerLat = (bounds.northeast.latitude + bounds.southwest.latitude) / 2;

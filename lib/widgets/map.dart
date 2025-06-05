@@ -449,7 +449,7 @@ class _MyMapState extends State<MyMap> {
           infoWindow: InfoWindow(title: name),
           onTap: () async {
             var response;
-            if (info != {}) {
+            if (widget.mode == "history") {
               response = info;
             } else {
               response = await fetchPlaceDetails(placeId);

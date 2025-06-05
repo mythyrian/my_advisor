@@ -1,77 +1,107 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/color.dart';
-import 'icon_box.dart';
+import 'package:my_advisor/constant/place_type.dart';
+import 'package:my_advisor/utils/icon_service.dart';
 
 class PropertyItem extends StatelessWidget {
-  const PropertyItem({super.key, required this.data});
+  final Map<String, dynamic> data;
 
-  final data;
+  const PropertyItem({required this.data, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 240,
-      margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(25),
-        boxShadow: [
-          BoxShadow(
-            color: Color(AppColor.shadowColor).withOpacity(0.1),
-            spreadRadius: .5,
-            blurRadius: 1,
-            offset: Offset(0, 1), // changes position of shadow
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          Positioned(right: 20, top: 130, child: _buildFavorite()),
-          Positioned(left: 15, top: 160, child: _buildInfo()),
-        ],
-      ),
+    final myImages = (data['my_images'] as List<dynamic>?) ?? [];
+    final icon = PlaceType.placeTypeList.firstWhere(
+      (b) => data['types'].any((a) => a == b['name']),
+      orElse:
+          () => {
+            'name': 'place',
+            'label': 'Place',
+            'color': AppColor.darker,
+            'icon': "place",
+          },
     );
-  }
-
-  Widget _buildFavorite() {
-    return IconBox(
-      bgColor: Color(AppColor.red),
-      child: Icon(Icons.favorite, color: Colors.white, size: 20),
-    );
-  }
-
-  Widget _buildInfo() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          data["name"],
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 5),
-        Row(
+    return Card(
+      elevation: 4,
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.place_outlined, color: Color(AppColor.darker), size: 13),
-            const SizedBox(width: 3),
+            const SizedBox(height: 8),
             Text(
-              "adress",
-              style: TextStyle(fontSize: 13, color: Color(AppColor.darker)),
+              data['name'] ?? 'Nome sconosciuto',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
+            Text(
+              data['formatted_address'] ?? 'Indirizzo non disponibile',
+              style: const TextStyle(color: Colors.grey),
+            ),
+            const SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.star, color: Colors.amber.shade700, size: 20),
+                    Text('${data['rating'] ?? '-'}/5'),
+                    const SizedBox(width: 6),
+                    Text('(${data['user_ratings_total'] ?? 0} voti)'),
+                  ],
+                ),
+                Icon(
+                  getIconByName(icon['icon'] as String),
+                  size: 32,
+                  color: Color(icon['color'] as int),
+                ),
+              ],
+            ),
+            if (data['my_rating'] != null || data['my_comment'] != null)
+              const Divider(height: 20),
+            if (data['my_rating'] != null)
+              Row(
+                children: [
+                  const Icon(Icons.person, size: 18),
+                  const SizedBox(width: 4),
+                  Text('La mia valutazione: ${data['my_rating']}/5'),
+                ],
+              ),
+            if (data['my_comment'] != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  '"${data['my_comment']}"',
+                  style: const TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+            if (myImages.isNotEmpty)
+              SizedBox(
+                height: 60,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: myImages.length,
+                  itemBuilder:
+                      (_, i) => Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.file(
+                            File(myImages[i]),
+                            width: 60,
+                            height: 60,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                ),
+              ),
           ],
         ),
-        const SizedBox(height: 5),
-        Text(
-          "time",
-          style: TextStyle(
-            fontSize: 15,
-            color: Color(AppColor.primary),
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
