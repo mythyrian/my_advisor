@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:my_advisor/pages/history.dart';
 import 'package:my_advisor/pages/review.dart';
 import 'package:my_advisor/constant/color.dart';
+import 'package:my_advisor/pages/setting.dart';
 import 'package:my_advisor/widgets/bottombar_item.dart';
 
 import 'home.dart';
@@ -37,11 +38,11 @@ class _RootAppState extends State<RootApp> {
       "active_icon": Icons.location_history_rounded,
       "page": HistoryPage(),
     },
-    /*{
+    {
       "icon": Icons.settings_outlined,
       "active_icon": Icons.settings_rounded,
-      "page": LogPage(),
-    },*/
+      "page": SettingPage(),
+    },
   ];
 
   @override
