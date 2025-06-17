@@ -42,7 +42,7 @@ class _ReviewFormState extends State<ReviewForm> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
-            "Scrivi una recensione",
+            "Write a review",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 20),
@@ -108,7 +108,7 @@ class _ReviewFormState extends State<ReviewForm> {
           ElevatedButton.icon(
             onPressed: _pickImages,
             icon: const Icon(Icons.add_a_photo),
-            label: const Text("Aggiungi immagini"),
+            label: const Text("Add images"),
             style: ElevatedButton.styleFrom(
               backgroundColor: Color(AppColor.sky),
             ),

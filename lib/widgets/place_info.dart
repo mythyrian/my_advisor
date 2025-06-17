@@ -167,7 +167,7 @@ class _PlaceInfoState extends State<PlaceInfo> {
                     await openPlaceOnGoogleMaps(place['place_id']);
                   },
                   icon: const Icon(Icons.directions),
-                  label: const Text("Indicazioni"),
+                  label: const Text("Directions"),
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
@@ -176,7 +176,7 @@ class _PlaceInfoState extends State<PlaceInfo> {
                         : () => {};
                   },
                   icon: const Icon(Icons.call),
-                  label: const Text("Chiama"),
+                  label: const Text("Call"),
                 ),
               ],
             ),
