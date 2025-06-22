@@ -13,7 +13,11 @@ class LanguageDropdown extends StatefulWidget {
 class _LanguageDropdownState extends State<LanguageDropdown> {
   late String selectedLang = 'en';
   bool isDropdownOpen = false;
-  final List<String> languages = ['en', 'it', 'ro'];
+  final languages = [
+    {"name": "en", "label": "English"},
+    {"name": "it", "label": "Italiano"},
+    {"name": "ro", "label": "Română"},
+  ];
 
   @override
   void initState() {
@@ -57,7 +61,10 @@ class _LanguageDropdownState extends State<LanguageDropdown> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                selectedLang,
+                languages.firstWhere(
+                      (el) => el["name"] == selectedLang,
+                    )["label"]
+                    as String,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -82,14 +89,15 @@ class _LanguageDropdownState extends State<LanguageDropdown> {
               children:
                   languages.map((lang) {
                     return InkWell(
-                      onTap: () => selectLanguage(lang, context),
+                      onTap:
+                          () => selectLanguage(lang["name"] as String, context),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 12,
                           vertical: 8,
                         ),
                         child: Text(
-                          lang,
+                          lang["label"] as String,
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.blueGrey[800],

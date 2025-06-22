@@ -26,7 +26,10 @@ Future<dynamic> readValue(String key) async {
       title: Text(tr("error_write_value_title")),
       description: RichText(
         text: TextSpan(
-          text: tr("error_write_value_label", namedArgs: {'resp': e.toString()}),
+          text: tr(
+            "error_write_value_label",
+            namedArgs: {'resp': e.toString()},
+          ),
         ),
       ),
       autoCloseDuration: const Duration(seconds: 3),
@@ -53,7 +56,10 @@ Future<void> writeValue(String key, dynamic value) async {
       title: Text(tr("error_write_value_title")),
       description: RichText(
         text: TextSpan(
-          text: tr("error_write_value_label", namedArgs: {'resp': e.toString()}),
+          text: tr(
+            "error_write_value_label",
+            namedArgs: {'resp': e.toString()},
+          ),
         ),
       ),
       autoCloseDuration: const Duration(seconds: 3),

@@ -50,13 +50,18 @@ class PropertyItem extends StatelessWidget {
                   children: [
                     Icon(Icons.star, color: Colors.amber.shade700, size: 20),
                     Text(
-                      tr('rating', namedArgs: {'val': data['rating'].toString()}),
+                      tr(
+                        'rating',
+                        namedArgs: {'val': data['rating'].toString()},
+                      ),
                     ),
                     const SizedBox(width: 6),
                     Text(
                       tr(
                         'user_ratings_total',
-                        namedArgs: {'number': data['user_ratings_total'].toString()},
+                        namedArgs: {
+                          'number': data['user_ratings_total'].toString(),
+                        },
                       ),
                     ),
                   ],
@@ -75,7 +80,12 @@ class PropertyItem extends StatelessWidget {
                 children: [
                   const Icon(Icons.person, size: 18),
                   const SizedBox(width: 4),
-                  Text(tr('my_rating', namedArgs: {'val': data['my_rating'].toString()})),
+                  Text(
+                    tr(
+                      'my_rating',
+                      namedArgs: {'val': data['my_rating'].toString()},
+                    ),
+                  ),
                 ],
               ),
             if (data['my_comment'] != null)
