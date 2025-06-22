@@ -17,7 +17,6 @@ Future<dynamic> readValue(String key) async {
 
     final contents = await file.readAsString();
     final data = json.decode(contents);
-    print(data);
     return data[key];
   } catch (e) {
     toastification.show(
