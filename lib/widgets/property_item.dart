@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/constant/place_type.dart';
@@ -34,11 +35,11 @@ class PropertyItem extends StatelessWidget {
           children: [
             const SizedBox(height: 8),
             Text(
-              data['name'] ?? 'Nome sconosciuto',
+              data['name'] ?? tr('unknown_name'),
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             Text(
-              data['formatted_address'] ?? 'Indirizzo non disponibile',
+              data['formatted_address'] ?? tr('address_not_available'),
               style: const TextStyle(color: Colors.grey),
             ),
             const SizedBox(height: 4),
@@ -48,9 +49,16 @@ class PropertyItem extends StatelessWidget {
                 Row(
                   children: [
                     Icon(Icons.star, color: Colors.amber.shade700, size: 20),
-                    Text('${data['rating'] ?? '-'}/5'),
+                    Text(
+                      tr('rating', namedArgs: {'val': data['rating'].toString()}),
+                    ),
                     const SizedBox(width: 6),
-                    Text('(${data['user_ratings_total'] ?? 0} voti)'),
+                    Text(
+                      tr(
+                        'user_ratings_total',
+                        namedArgs: {'number': data['user_ratings_total'].toString()},
+                      ),
+                    ),
                   ],
                 ),
                 Icon(
@@ -67,7 +75,7 @@ class PropertyItem extends StatelessWidget {
                 children: [
                   const Icon(Icons.person, size: 18),
                   const SizedBox(width: 4),
-                  Text('La mia valutazione: ${data['my_rating']}/5'),
+                  Text(tr('my_rating', namedArgs: {'val': data['my_rating'].toString()})),
                 ],
               ),
             if (data['my_comment'] != null)

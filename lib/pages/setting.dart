@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:my_advisor/widgets/language_widget.dart';
 
@@ -18,7 +19,7 @@ class _SettingPageState extends State<SettingPage> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [Text('Language:'), LanguageDropdown()],
+              children: [Text(tr("language")), LanguageDropdown()],
             ),
           ],
         ),

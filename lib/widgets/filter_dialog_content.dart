@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/constant/place_type.dart';
@@ -37,8 +38,8 @@ class _FilterDialogContentState extends State<FilterDialogContent> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              "Filters",
+            Text(
+              tr("filters"),
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
 
@@ -88,7 +89,7 @@ class _FilterDialogContentState extends State<FilterDialogContent> {
                     label: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(type['label'] as String),
+                        Text(tr(type['name'] as String)),
                         const SizedBox(width: 6),
                         CircleAvatar(
                           backgroundColor: Colors.white,
@@ -116,7 +117,7 @@ class _FilterDialogContentState extends State<FilterDialogContent> {
                   label: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text("clean"),
+                      Text(tr("clean")),
                       const SizedBox(width: 6),
                       CircleAvatar(
                         backgroundColor: Colors.white,
@@ -149,8 +150,8 @@ class _FilterDialogContentState extends State<FilterDialogContent> {
               children: [
                 OutlinedButton(
                   onPressed: () => Navigator.of(context).pop(),
-                  child: const Text(
-                    "Discard",
+                  child: Text(
+                    tr("discard"),
                     style: TextStyle(color: Color(AppColor.primary)),
                   ),
                 ),
@@ -166,7 +167,7 @@ class _FilterDialogContentState extends State<FilterDialogContent> {
                     });
                     Navigator.of(context).pop();
                   },
-                  child: const Text("Apply"),
+                  child: Text(tr("apply")),
                 ),
               ],
             ),

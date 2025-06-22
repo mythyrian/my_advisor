@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/color.dart';
 
@@ -37,7 +38,7 @@ class CategoryItem extends StatelessWidget {
         ),
         child: Center(
           child: Text(
-            data["name"],
+            tr(data["name"]),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(

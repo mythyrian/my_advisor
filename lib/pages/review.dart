@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/constant/place_type.dart';
@@ -42,7 +43,7 @@ class _ReviewPageState extends State<ReviewPage> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
             child: Text(
-              "Reviewed",
+              tr("reviewed"),
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
           ),
@@ -53,7 +54,7 @@ class _ReviewPageState extends State<ReviewPage> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
-                return Center(child: Text('Errore nel caricamento'));
+                return Center(child: Text(tr("error_loading")));
               } else {
                 return snapshot.data!;
               }

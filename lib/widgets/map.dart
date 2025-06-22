@@ -292,11 +292,9 @@ class _MyMapState extends State<MyMap> {
       toastification.show(
         type: ToastificationType.warning,
         style: ToastificationStyle.fillColored,
-        title: Text('Empty preference!'),
+        title: Text(tr("empty_preference")),
         description: RichText(
-          text: const TextSpan(
-            text: 'Please choose a preference in the filter',
-          ),
+          text: TextSpan(text: tr("please_choose_a_preference_in_the_filter")),
         ),
         autoCloseDuration: const Duration(seconds: 3),
       );

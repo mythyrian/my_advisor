@@ -92,10 +92,10 @@ List recents = [
 ];
 
 List categories = [
-  {"name": "Today"},
-  {"name": "Yesterday"},
-  {"name": "Week"},
-  {"name": "Month"},
+  {"name": "today"},
+  {"name": "yesterday"},
+  {"name": "week"},
+  {"name": "month"},
 ];
 
 var reviewers = [

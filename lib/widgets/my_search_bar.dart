@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/utils/hive_store.dart';
@@ -41,7 +42,7 @@ class _MySearchBarState extends State<MySearchBar> {
           children: [
             Expanded(
               child: CustomTextBox(
-                hint: "Search",
+                hint: tr("search"),
                 prefix: Icon(Icons.search, color: Colors.grey),
                 controller: _controller,
                 onSubmitted: (value) {

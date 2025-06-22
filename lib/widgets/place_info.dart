@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:my_advisor/utils/database_service.dart';
 import 'package:my_advisor/utils/map_api.dart';
@@ -89,9 +90,14 @@ class _PlaceInfoState extends State<PlaceInfo> {
           children: [
             const Icon(Icons.star, color: Colors.orange, size: 20),
             const SizedBox(width: 4),
-            Text('${place['rating'] ?? 'N/A'}'),
+            Text(tr("n_a")),
             const SizedBox(width: 8),
-            Text("(${place['user_ratings_total'] ?? 0} recensioni)"),
+            Text(
+              tr(
+                'user_ratings_total',
+                namedArgs: {'val': place['user_ratings_total'].toString()},
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 8),
@@ -100,7 +106,7 @@ class _PlaceInfoState extends State<PlaceInfo> {
           style: const TextStyle(color: Colors.grey),
         ),
         const SizedBox(height: 8),
-        Text("📞 ${place['formatted_phone_number'] ?? 'Non disponibile'}"),
+        Text("📞 ${place['formatted_phone_number'] ?? tr('not_available')}"),
         const SizedBox(height: 4),
         link(place),
         const SizedBox(height: 12),
@@ -130,9 +136,9 @@ class _PlaceInfoState extends State<PlaceInfo> {
                 },
               ),
             )
-            : const SizedBox(
+            : SizedBox(
               height: 100,
-              child: Center(child: Text("No online image available")),
+              child: Center(child: Text(tr("no_online_image_available"))),
             ),
         widget.mode == "history" ? Container() : const SizedBox(height: 10),
         widget.mode == "history"
@@ -148,14 +154,14 @@ class _PlaceInfoState extends State<PlaceInfo> {
                     _openReviewForm();
                   },
                   icon: const Icon(Icons.edit_note),
-                  label: const Text("Add review"),
+                  label: Text(tr("add_review")),
                 ),
                 ElevatedButton.icon(
                   onPressed: () async {
                     await deleteValueInList("placeVisited", place['place_id']);
                   },
                   icon: const Icon(Icons.delete),
-                  label: const Text("Not been here"),
+                  label: Text(tr("not_been_here")),
                 ),
               ],
             )
@@ -167,7 +173,7 @@ class _PlaceInfoState extends State<PlaceInfo> {
                     await openPlaceOnGoogleMaps(place['place_id']);
                   },
                   icon: const Icon(Icons.directions),
-                  label: const Text("Directions"),
+                  label: Text(tr("directions")),
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
@@ -176,7 +182,7 @@ class _PlaceInfoState extends State<PlaceInfo> {
                         : () => {};
                   },
                   icon: const Icon(Icons.call),
-                  label: const Text("Call"),
+                  label: Text(tr("call")),
                 ),
               ],
             ),
@@ -217,7 +223,7 @@ class _PlaceInfoState extends State<PlaceInfo> {
         ),
       );
     } else {
-      return const Text("🌐 Non disponibile");
+      return Text("🌐 ${tr("not_available")}");
     }
   }
 

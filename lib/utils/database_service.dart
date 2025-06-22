@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:toastification/toastification.dart';
@@ -22,8 +23,12 @@ Future<dynamic> readValue(String key) async {
     toastification.show(
       type: ToastificationType.error,
       style: ToastificationStyle.fillColored,
-      title: Text('Errore in writeValue!'),
-      description: RichText(text: TextSpan(text: "Errore in writeValue: $e")),
+      title: Text(tr("error_write_value_title")),
+      description: RichText(
+        text: TextSpan(
+          text: tr("error_write_value_label", namedArgs: {'resp': e.toString()}),
+        ),
+      ),
       autoCloseDuration: const Duration(seconds: 3),
     );
   }
@@ -45,8 +50,12 @@ Future<void> writeValue(String key, dynamic value) async {
     toastification.show(
       type: ToastificationType.error,
       style: ToastificationStyle.fillColored,
-      title: Text('Errore in writeValue!'),
-      description: RichText(text: TextSpan(text: "Errore in writeValue: $e")),
+      title: Text(tr("error_write_value_title")),
+      description: RichText(
+        text: TextSpan(
+          text: tr("error_write_value_label", namedArgs: {'resp': e.toString()}),
+        ),
+      ),
       autoCloseDuration: const Duration(seconds: 3),
     );
   }
@@ -98,9 +107,11 @@ Future<void> appendToList(String key, dynamic newValue) async {
         toastification.show(
           type: ToastificationType.error,
           style: ToastificationStyle.fillColored,
-          title: Text('Errore in json.decode!'),
+          title: Text(tr("error_json_title")),
           description: RichText(
-            text: TextSpan(text: "Errore in json.decode: $e"),
+            text: TextSpan(
+              text: tr("error_json_label", namedArgs: {'resp': e.toString()}),
+            ),
           ),
           autoCloseDuration: const Duration(seconds: 3),
         );
@@ -115,4 +126,3 @@ Future<void> appendToList(String key, dynamic newValue) async {
 
   await file.writeAsString(json.encode(data));
 }
-

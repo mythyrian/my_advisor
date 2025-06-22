@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
@@ -17,9 +18,11 @@ Future<List<dynamic>?> fetchNearbyPlaces(
     toastification.show(
       type: ToastificationType.warning,
       style: ToastificationStyle.fillColored,
-      title: Text('No Text Search or Filter!'),
+      title: Text(tr("no_text_search_or_filter")),
       description: RichText(
-        text: TextSpan(text: "please insert keyword for search or add filter"),
+        text: TextSpan(
+          text: tr("please_insert_keyword_for_search_or_add_filter"),
+        ),
       ),
       autoCloseDuration: const Duration(seconds: 3),
     );
@@ -56,9 +59,14 @@ Future<List<dynamic>?> fetchNearbyPlaces(
     toastification.show(
       type: ToastificationType.error,
       style: ToastificationStyle.fillColored,
-      title: Text('Errore Google API!'),
+      title: Text(tr("error_google_api_title")),
       description: RichText(
-        text: TextSpan(text: "Errore Google API: ${data['status']}"),
+        text: TextSpan(
+          text: tr(
+            "error_google_api_label",
+            namedArgs: {'resp': data['status'].toString()},
+          ),
+        ),
       ),
       autoCloseDuration: const Duration(seconds: 3),
     );
@@ -84,9 +92,14 @@ Future<Map<String, dynamic>?> fetchPlaceDetails(String placeId) async {
       toastification.show(
         type: ToastificationType.error,
         style: ToastificationStyle.fillColored,
-        title: Text('Errore Google API!'),
+        title: Text(tr("error_google_api_title")),
         description: RichText(
-          text: TextSpan(text: "Errore Google API: ${data['status']}"),
+          text: TextSpan(
+            text: tr(
+              "error_google_api_label",
+              namedArgs: {'resp': data['status'].toString()},
+            ),
+          ),
         ),
         autoCloseDuration: const Duration(seconds: 3),
       );
@@ -96,9 +109,14 @@ Future<Map<String, dynamic>?> fetchPlaceDetails(String placeId) async {
     toastification.show(
       type: ToastificationType.error,
       style: ToastificationStyle.fillColored,
-      title: Text('Errore HTTP!'),
+      title: Text(tr("error_http_title")),
       description: RichText(
-        text: TextSpan(text: "Errore HTTP: ${response.statusCode}"),
+        text: TextSpan(
+          text: tr(
+            "error_http_label",
+            namedArgs: {'resp': response.statusCode.toString()},
+          ),
+        ),
       ),
       autoCloseDuration: const Duration(seconds: 3),
     );
@@ -140,9 +158,14 @@ Future<List<dynamic>?> fetchNearbyPlacesByKeyword(
     toastification.show(
       type: ToastificationType.error,
       style: ToastificationStyle.fillColored,
-      title: Text('Errore Google API!'),
+      title: Text(tr("error_google_api_title")),
       description: RichText(
-        text: TextSpan(text: "Errore Google API: ${data['status']}"),
+        text: TextSpan(
+          text: tr(
+            "error_google_api_label",
+            namedArgs: {'resp': data['status'].toString()},
+          ),
+        ),
       ),
       autoCloseDuration: const Duration(seconds: 3),
     );
@@ -169,9 +192,14 @@ Future<List<dynamic>?> fetchNearbyPlacesShortRange() async {
     toastification.show(
       type: ToastificationType.error,
       style: ToastificationStyle.fillColored,
-      title: Text('Errore Google API!'),
+      title: Text(tr("error_google_api_title")),
       description: RichText(
-        text: TextSpan(text: "Errore Google API: ${data['status']}"),
+        text: TextSpan(
+          text: tr(
+            "error_google_api_label",
+            namedArgs: {'resp': data['status'].toString()},
+          ),
+        ),
       ),
       autoCloseDuration: const Duration(seconds: 3),
     );

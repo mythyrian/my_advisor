@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:my_advisor/utils/data.dart';
 import 'package:my_advisor/utils/database_service.dart';
@@ -39,7 +40,7 @@ class _HistoryPageState extends State<HistoryPage> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
-              return Center(child: Text('Errore nel caricamento'));
+              return Center(child: Text(tr("error_loading")));
             } else {
               return snapshot.data!;
             }

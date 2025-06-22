@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/utils/icon_service.dart';
@@ -55,7 +56,7 @@ class PlaceTypeLabelItem extends StatelessWidget {
               ),
             ),
             Text(
-              data["label"],
+              tr(data["name"]),
               maxLines: 1,
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
             ),

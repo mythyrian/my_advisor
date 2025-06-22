@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/place_type.dart';
 import 'package:my_advisor/utils/database_service.dart';
@@ -14,9 +15,14 @@ class LocationLoggerService {
       toastification.show(
         type: ToastificationType.error,
         style: ToastificationStyle.fillColored,
-        title: Text('Errore nel background task!'),
+        title: Text(tr("error_background_title")),
         description: RichText(
-          text: TextSpan(text: "Errore nel background task: $e"),
+          text: TextSpan(
+            text: tr(
+              "error_background_label",
+              namedArgs: {'resp': e.toString()},
+            ),
+          ),
         ),
         autoCloseDuration: const Duration(seconds: 3),
       );

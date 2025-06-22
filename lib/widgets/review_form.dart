@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_advisor/constant/color.dart';
@@ -41,8 +42,8 @@ class _ReviewFormState extends State<ReviewForm> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
-            "Write a review",
+          Text(
+            tr("write_a_review"),
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 20),
@@ -70,7 +71,7 @@ class _ReviewFormState extends State<ReviewForm> {
             controller: _reviewController,
             maxLines: 5,
             decoration: InputDecoration(
-              hintText: "Scrivi qui la tua esperienza...",
+              hintText: tr("write"),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -108,7 +109,7 @@ class _ReviewFormState extends State<ReviewForm> {
           ElevatedButton.icon(
             onPressed: _pickImages,
             icon: const Icon(Icons.add_a_photo),
-            label: const Text("Add images"),
+            label: Text(tr("add_images")),
             style: ElevatedButton.styleFrom(
               backgroundColor: Color(AppColor.sky),
             ),
@@ -120,8 +121,8 @@ class _ReviewFormState extends State<ReviewForm> {
             children: [
               OutlinedButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text(
-                  "Discard",
+                child: Text(
+                  tr("discard"),
                   style: TextStyle(color: Colors.black),
                 ),
               ),
@@ -134,7 +135,7 @@ class _ReviewFormState extends State<ReviewForm> {
                   await appendToList("placeReviewed", place);
                   Navigator.of(context).pop();
                 },
-                child: const Text("Save"),
+                child: Text(tr("save")),
               ),
             ],
           ),

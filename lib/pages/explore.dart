@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/utils/data.dart';
@@ -56,20 +57,20 @@ class _ExplorePageState extends State<ExplorePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 20),
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(left: 15),
             child: Text(
-              "Matched Properties",
+              tr("matched_properties"),
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
           ),
           const SizedBox(height: 20),
           _buildRecommended(),
           const SizedBox(height: 20),
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(left: 15),
             child: Text(
-              "Companies",
+              tr("companies"),
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
           ),

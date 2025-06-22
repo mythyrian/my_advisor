@@ -15,20 +15,21 @@ class _LanguageDropdownState extends State<LanguageDropdown> {
   bool isDropdownOpen = false;
   final List<String> languages = ['en', 'it', 'ro'];
 
-@override
-void initState() {
-  super.initState();
-  _loadSelectedLang();
-}
-
-void _loadSelectedLang() async {
-  final value = HiveStore.get("app_language");
-  if (mounted) {
-    setState(() {
-      selectedLang = value ?? 'en'; 
-    });
+  @override
+  void initState() {
+    super.initState();
+    _loadSelectedLang();
   }
-}
+
+  void _loadSelectedLang() async {
+    final value = HiveStore.get("app_language");
+    if (mounted) {
+      setState(() {
+        selectedLang = value ?? 'en';
+      });
+    }
+  }
+
   void toggleDropdown() {
     setState(() {
       isDropdownOpen = !isDropdownOpen;
