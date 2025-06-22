@@ -16,6 +16,9 @@ class HiveStore {
     if (!_box.containsKey("search_keyword")) {
       await _box.put("search_keyword", "");
     }
+    if (!_box.containsKey("app_language")) {
+      await _box.put("app_language", "en");
+    }
   }
 
   /// Salva un valore con una chiave

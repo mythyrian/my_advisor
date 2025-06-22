@@ -50,6 +50,8 @@ dependencies:
   workmanager: ^0.6.0
   url_launcher: ^6.3.1
   image_picker: ^1.1.2
+  easy_localization: ^3.0.7+1
+  get: ^4.7.2
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +79,7 @@ flutter:
   assets:
     - assets/icon/
     - assets/
+    - assets/langs/
     - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -95,13 +96,14 @@ class _MyMapState extends State<MyMap> {
 
     // Ottieni la posizione corrente
     final position = await Geolocator.getCurrentPosition();
-
-    setState(() {
-      _initialPosition = CameraPosition(
-        target: LatLng(position.latitude, position.longitude),
-        zoom: initZoom,
-      );
-    });
+    if (mounted) {
+      setState(() {
+        _initialPosition = CameraPosition(
+          target: LatLng(position.latitude, position.longitude),
+          zoom: initZoom,
+        );
+      });
+    }
   }
 
   @override
@@ -135,7 +137,7 @@ class _MyMapState extends State<MyMap> {
                             Icons.search,
                             color: Color(AppColor.primary),
                           ),
-                          label: const Text("Search by filter"),
+                          label: Text(tr('search_by_filter')),
                         ),
                       ),
                     ),

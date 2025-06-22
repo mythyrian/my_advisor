@@ -1,22 +1,44 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:my_advisor/utils/hive_store.dart' show HiveStore;
 
 class LanguageDropdown extends StatefulWidget {
+  const LanguageDropdown({super.key});
+
   @override
   _LanguageDropdownState createState() => _LanguageDropdownState();
 }
 
 class _LanguageDropdownState extends State<LanguageDropdown> {
-  String selectedLang = 'ENG';
+  late String selectedLang = 'en';
   bool isDropdownOpen = false;
-  final List<String> languages = ['ENG', 'EST', 'RUS', 'FIN'];
+  final List<String> languages = ['en', 'it', 'ro'];
 
+@override
+void initState() {
+  super.initState();
+  _loadSelectedLang();
+}
+
+void _loadSelectedLang() async {
+  final value = HiveStore.get("app_language");
+  if (mounted) {
+    setState(() {
+      selectedLang = value ?? 'en'; 
+    });
+  }
+}
   void toggleDropdown() {
     setState(() {
       isDropdownOpen = !isDropdownOpen;
     });
   }
 
-  void selectLanguage(String lang) {
+  void selectLanguage(String lang, BuildContext context) {
+    context.setLocale(Locale(lang));
+    Get.updateLocale(Locale(lang));
+    HiveStore.put("app_language", lang);
     setState(() {
       selectedLang = lang;
       isDropdownOpen = false;
@@ -59,7 +81,7 @@ class _LanguageDropdownState extends State<LanguageDropdown> {
               children:
                   languages.map((lang) {
                     return InkWell(
-                      onTap: () => selectLanguage(lang),
+                      onTap: () => selectLanguage(lang, context),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 12,
