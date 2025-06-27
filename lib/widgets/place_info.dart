@@ -2,7 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:my_advisor/utils/database_service.dart';
 import 'package:my_advisor/utils/map_api.dart';
-import 'package:my_advisor/widgets/broker_item.dart';
+import 'package:my_advisor/widgets/review_item.dart';
 import 'package:my_advisor/widgets/review_form.dart';
 import 'package:url_launcher/url_launcher.dart';
 
