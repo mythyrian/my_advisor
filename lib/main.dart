@@ -31,11 +31,14 @@ void startForegroundTracking() {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  //start hive store (persistent store)
   await Hive.initFlutter();
   await HiveStore.init();
 
+  // load env file where are google api key
   await dotenv.load(fileName: ".env");
 
+  // start location service to catch place visited every 15 min 
   startForegroundTracking();
 
   await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
@@ -48,7 +51,9 @@ Future<void> main() async {
     constraints: Constraints(networkType: NetworkType.connected),
   );
 
+  // language service
   await EasyLocalization.ensureInitialized();
+  
 
   runApp(
     EasyLocalization(

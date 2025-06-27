@@ -28,11 +28,6 @@ class _RootAppState extends State<RootApp> {
       "active_icon": Icons.rate_review_rounded,
       "page": ReviewPage(),
     },
-    /*{
-      "icon": Icons.favorite_border,
-      "active_icon": Icons.favorite_outlined,
-      "page": ExplorePage(),
-    }, */
     {
       "icon": Icons.location_history_outlined,
       "active_icon": Icons.location_history_rounded,
@@ -93,7 +88,7 @@ class _RootAppState extends State<RootApp> {
                 ? _barItems[index]["active_icon"]
                 : _barItems[index]["icon"],
             isActive: _activeTab == index,
-            activeColor: Color(AppColor.primary),
+            activeColor: Color(AppColor.primary ),
             onTap: () {
               setState(() {
                 _activeTab = index;
