@@ -106,7 +106,7 @@ class _MyMapState extends State<MyMap> {
     }
   }
 
-  @override
+  @override  // e il google maps con i suoi bottoni visibili sulla mappa piu barra
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -223,7 +223,7 @@ class _MyMapState extends State<MyMap> {
     );
   }
 
-  Widget googleMap() {
+  Widget googleMap() {  //creazione effettiva di google maps
     return _initialPosition == null
         ? const Center(child: CircularProgressIndicator())
         : GoogleMap(

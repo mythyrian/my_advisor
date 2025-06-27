@@ -41,7 +41,7 @@ class _RootAppState extends State<RootApp> {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { //questo widget builda tutta la pagina
     return Scaffold(
       backgroundColor: Color(AppColor.appBgColor),
       body: _buildPage(),
@@ -51,7 +51,7 @@ class _RootAppState extends State<RootApp> {
     );
   }
 
-  Widget _buildPage() {
+  Widget _buildPage() { // crea le pagine history,setting,review  e home
     return IndexedStack(
       index: _activeTab,
       children: List.generate(

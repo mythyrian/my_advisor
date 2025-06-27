@@ -10,7 +10,7 @@ class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
 
   @override
-  _HistoryPageState createState() => _HistoryPageState();
+  _HistoryPageState createState() => _HistoryPageState(); //in ogni pages si crea il statefull widget
 }
 
 class _HistoryPageState extends State<HistoryPage> {
