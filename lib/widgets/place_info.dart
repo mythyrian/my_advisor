@@ -95,7 +95,7 @@ class _PlaceInfoState extends State<PlaceInfo> {
             Text(
               tr(
                 'user_ratings_total',
-                namedArgs: {'val': place['user_ratings_total'].toString()},
+                namedArgs: {'number': place['user_ratings_total'].toString()},
               ),
             ),
           ],
@@ -103,6 +103,8 @@ class _PlaceInfoState extends State<PlaceInfo> {
         const SizedBox(height: 8),
         Text(
           place['formatted_address'] ?? '',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: const TextStyle(color: Colors.grey),
         ),
         const SizedBox(height: 8),
@@ -216,6 +218,8 @@ class _PlaceInfoState extends State<PlaceInfo> {
         onTap: () => openWebsite(place['website']),
         child: Text(
           "🌐 ${place['website']}",
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: TextStyle(
             color: Colors.blue,
             decoration: TextDecoration.underline,

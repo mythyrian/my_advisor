@@ -40,6 +40,8 @@ class PropertyItem extends StatelessWidget {
             ),
             Text(
               data['formatted_address'] ?? tr('address_not_available'),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(color: Colors.grey),
             ),
             const SizedBox(height: 4),
