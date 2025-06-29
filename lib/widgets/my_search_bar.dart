@@ -47,7 +47,7 @@ class _MySearchBarState extends State<MySearchBar> {
                 controller: _controller,
                 onSubmitted: (value) {
                   HiveStore.put("search_keyword", value.trim());
-                  widget.search();
+                  widget.search(value);
                 },
               ),
             ),

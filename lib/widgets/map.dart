@@ -439,8 +439,8 @@ class _MyMapState extends State<MyMap> {
       logicalSize: const Size(80, 80),
       imageSize: const Size(80, 80),
     );
-
-    setState(() {
+    if(mounted){
+ setState(() {
       _markers.add(
         Marker(
           markerId: MarkerId(name),
@@ -461,6 +461,8 @@ class _MyMapState extends State<MyMap> {
           },
         ),
       );
-    });
+    }); 
+    }
+     
   }
 }

@@ -53,8 +53,8 @@ Future<void> main() async {
 
   // language service
   await EasyLocalization.ensureInitialized();
+  EasyLocalization.logger.enableBuildModes = [];
   
-
   runApp(
     EasyLocalization(
       supportedLocales: [Locale('en'), Locale('it'), Locale('ro')],
