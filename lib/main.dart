@@ -38,7 +38,7 @@ Future<void> main() async {
   // load env file where are google api key
   await dotenv.load(fileName: ".env");
 
-  // start location service to catch place visited every 15 min 
+  // start location service to catch place visited every 15 min
   startForegroundTracking();
 
   await Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
@@ -54,7 +54,7 @@ Future<void> main() async {
   // language service
   await EasyLocalization.ensureInitialized();
   EasyLocalization.logger.enableBuildModes = [];
-  
+
   runApp(
     EasyLocalization(
       supportedLocales: [Locale('en'), Locale('it'), Locale('ro')],

@@ -41,7 +41,8 @@ class _RootAppState extends State<RootApp> {
   ];
 
   @override
-  Widget build(BuildContext context) { //questo widget builda tutta la pagina
+  Widget build(BuildContext context) {
+    //questo widget builda tutta la pagina
     return Scaffold(
       backgroundColor: Color(AppColor.appBgColor),
       body: _buildPage(),
@@ -51,7 +52,8 @@ class _RootAppState extends State<RootApp> {
     );
   }
 
-  Widget _buildPage() { // crea le pagine history,setting,review  e home
+  Widget _buildPage() {
+    // crea le pagine history,setting,review  e home
     return IndexedStack(
       index: _activeTab,
       children: List.generate(
@@ -88,7 +90,7 @@ class _RootAppState extends State<RootApp> {
                 ? _barItems[index]["active_icon"]
                 : _barItems[index]["icon"],
             isActive: _activeTab == index,
-            activeColor: Color(AppColor.primary ),
+            activeColor: Color(AppColor.primary),
             onTap: () {
               setState(() {
                 _activeTab = index;

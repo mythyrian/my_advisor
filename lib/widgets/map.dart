@@ -106,7 +106,7 @@ class _MyMapState extends State<MyMap> {
     }
   }
 
-  @override  // e il google maps con i suoi bottoni visibili sulla mappa piu barra
+  @override // e il google maps con i suoi bottoni visibili sulla mappa piu barra
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
@@ -223,7 +223,8 @@ class _MyMapState extends State<MyMap> {
     );
   }
 
-  Widget googleMap() {  //creazione effettiva di google maps
+  Widget googleMap() {
+    //creazione effettiva di google maps
     return _initialPosition == null
         ? const Center(child: CircularProgressIndicator())
         : GoogleMap(
@@ -439,30 +440,29 @@ class _MyMapState extends State<MyMap> {
       logicalSize: const Size(80, 80),
       imageSize: const Size(80, 80),
     );
-    if(mounted){
- setState(() {
-      _markers.add(
-        Marker(
-          markerId: MarkerId(name),
-          position: position,
-          icon: icon,
-          infoWindow: InfoWindow(title: name),
-          onTap: () async {
-            var response;
-            if (widget.mode == "history") {
-              response = info;
-            } else {
-              response = await fetchPlaceDetails(placeId);
-            }
-            setState(() {
-              _selectedPlace = response;
-            });
-            _panelController.open();
-          },
-        ),
-      );
-    }); 
+    if (mounted) {
+      setState(() {
+        _markers.add(
+          Marker(
+            markerId: MarkerId(name),
+            position: position,
+            icon: icon,
+            infoWindow: InfoWindow(title: name),
+            onTap: () async {
+              var response;
+              if (widget.mode == "history") {
+                response = info;
+              } else {
+                response = await fetchPlaceDetails(placeId);
+              }
+              setState(() {
+                _selectedPlace = response;
+              });
+              _panelController.open();
+            },
+          ),
+        );
+      });
     }
-     
   }
 }

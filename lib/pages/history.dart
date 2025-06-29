@@ -14,7 +14,6 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-
   String searchValue = "";
 
   @override
@@ -23,11 +22,15 @@ class _HistoryPageState extends State<HistoryPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          MySearchBar(showFilter: false, search: (value) => {
-            setState(() {
-              searchValue = value;
-            })
-          }),
+          MySearchBar(
+            showFilter: false,
+            search:
+                (value) => {
+                  setState(() {
+                    searchValue = value;
+                  }),
+                },
+          ),
           _buildBody(),
         ],
       ),
@@ -85,42 +88,34 @@ class _HistoryPageState extends State<HistoryPage> {
     final screenHeight = MediaQuery.of(context).size.height;
     return SizedBox(
       height: screenHeight - 230,
-      child: MyMap(mode: "history", listHistoryPlaces: filterListPlaces != null || filterListPlaces == [] ? filterListPlaces : [] ),
+      child: MyMap(mode: "history", listHistoryPlaces: filterListPlaces),
     );
   }
 
-List<dynamic> filterListByText(
-  List<dynamic> list,
-  String search,
-) {
-  print("inizio");
-  if (search.trim().isEmpty || list.isEmpty) return [];
-   
-   print("filtra per testo");
-  final query = search.toLowerCase();
-  print(query);
-  bool matches(dynamic value) {
-    if (value == null) return false;
-    if (value is String) {
-      return value.toLowerCase().contains(query);
+  List<dynamic> filterListByText(List<dynamic> list, String search) {
+    if (search.trim().isEmpty || list.isEmpty) return [];
+    final query = search.toLowerCase();
+    bool matches(dynamic value) {
+      if (value == null) return false;
+      if (value is String) {
+        return value.toLowerCase().contains(query);
+      }
+      if (value is Map) {
+        return value.values.any(matches);
+      }
+      if (value is List) {
+        return value.any(matches);
+      }
+      return value.toString().toLowerCase().contains(query);
     }
-    if (value is Map) {
-      return value.values.any(matches);
-    }
-    if (value is List) {
-      return value.any(matches);
-    }
-    return value.toString().toLowerCase().contains(query);
+
+    final filtered =
+        list.where((item) {
+          return item.values.any(matches);
+        }).toList();
+
+    return filtered;
   }
-
-  final filtered = list.where((item) {
-    return item.values.any(matches);
-  }).toList();
-
-  return filtered;
-}
-
-
 
   List filterAndSortPlaces(List<dynamic> placeList, String selectedTimeRange) {
     final now = DateTime.now();
@@ -166,9 +161,8 @@ List<dynamic> filterListByText(
       final bTime = DateTime.parse(b["timestamp"]);
       return aTime.compareTo(bTime);
     });
-    if(searchValue != "" ) {
-      print("object");
-      filtered = filterListByText(filtered, searchValue );
+    if (searchValue != "") {
+      filtered = filterListByText(filtered, searchValue);
     }
     return filtered;
   }
