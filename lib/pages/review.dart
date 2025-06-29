@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:my_advisor/constant/color.dart';
 import 'package:my_advisor/constant/place_type.dart';
+import 'package:my_advisor/utils/common_function.dart';
 import 'package:my_advisor/utils/database_service.dart';
 import 'package:my_advisor/widgets/place_type_label_item.dart';
 import 'package:my_advisor/widgets/my_search_bar.dart';
@@ -16,6 +17,9 @@ class ReviewPage extends StatefulWidget {
 }
 
 class _ReviewPageState extends State<ReviewPage> {
+
+  String searchValue = "";
+
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -25,7 +29,9 @@ class _ReviewPageState extends State<ReviewPage> {
           pinned: true,
           snap: true,
           floating: true,
-          title: MySearchBar(showFilter: false, search: () => {}),
+          title: MySearchBar(showFilter: false, search: (value) => {setState(() {
+            searchValue = value;
+          })}),
         ),
         SliverToBoxAdapter(child: _buildBody()),
       ],
@@ -118,6 +124,10 @@ class _ReviewPageState extends State<ReviewPage> {
             final types = List<String>.from(place["types"]);
             return types.contains(_selectedCategory);
           }).toList();
+    }
+
+    if (searchValue != "") {
+      filterPlaces = filterListByText(filterPlaces, searchValue);
     }
 
     return CarouselSlider(

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:my_advisor/utils/common_function.dart';
 import 'package:my_advisor/utils/data.dart';
 import 'package:my_advisor/utils/database_service.dart';
 import 'package:my_advisor/widgets/category_item.dart';
@@ -90,31 +91,6 @@ class _HistoryPageState extends State<HistoryPage> {
       height: screenHeight - 230,
       child: MyMap(mode: "history", listHistoryPlaces: filterListPlaces),
     );
-  }
-
-  List<dynamic> filterListByText(List<dynamic> list, String search) {
-    if (search.trim().isEmpty || list.isEmpty) return [];
-    final query = search.toLowerCase();
-    bool matches(dynamic value) {
-      if (value == null) return false;
-      if (value is String) {
-        return value.toLowerCase().contains(query);
-      }
-      if (value is Map) {
-        return value.values.any(matches);
-      }
-      if (value is List) {
-        return value.any(matches);
-      }
-      return value.toString().toLowerCase().contains(query);
-    }
-
-    final filtered =
-        list.where((item) {
-          return item.values.any(matches);
-        }).toList();
-
-    return filtered;
   }
 
   List filterAndSortPlaces(List<dynamic> placeList, String selectedTimeRange) {
