@@ -8,8 +8,33 @@ import 'package:my_advisor/utils/icon_service.dart';
 
 class PropertyItem extends StatelessWidget {
   final Map<String, dynamic> data;
+  final VoidCallback? onConfirm;
 
-  const PropertyItem({required this.data, super.key});
+  const PropertyItem({required this.data, this.onConfirm, super.key});
+
+  void _showConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (ctx) => AlertDialog(
+            title: Text(tr('confirm_action_title')),
+            content: Text(tr('confirm_action_message')),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: Text(tr('no')),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                  if (onConfirm != null) onConfirm!();
+                },
+                child: Text(tr('yes')),
+              ),
+            ],
+          ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,102 +49,109 @@ class PropertyItem extends StatelessWidget {
             'icon': "place",
           },
     );
-    return Card(
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 8),
-            Text(
-              data['name'] ?? tr('unknown_name'),
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              data['formatted_address'] ?? tr('address_not_available'),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: Colors.grey),
-            ),
-            const SizedBox(height: 4),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+
+    return GestureDetector(
+      onLongPress: () => _showConfirmationDialog(context),
+      child: Card(
+        elevation: 4,
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 8),
+              Text(
+                data['name'] ?? tr('unknown_name'),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                data['formatted_address'] ?? tr('address_not_available'),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: Colors.grey),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.star, color: Colors.amber.shade700, size: 20),
+                      Text(
+                        tr(
+                          'rating',
+                          namedArgs: {'val': data['rating'].toString()},
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        tr(
+                          'user_ratings_total',
+                          namedArgs: {
+                            'number': data['user_ratings_total'].toString(),
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  Icon(
+                    getIconByName(icon['icon'] as String),
+                    size: 32,
+                    color: Color(icon['color'] as int),
+                  ),
+                ],
+              ),
+              if (data['my_rating'] != null || data['my_comment'] != null)
+                const Divider(height: 20),
+              if (data['my_rating'] != null)
                 Row(
                   children: [
-                    Icon(Icons.star, color: Colors.amber.shade700, size: 20),
+                    const Icon(Icons.person, size: 18),
+                    const SizedBox(width: 4),
                     Text(
                       tr(
-                        'rating',
-                        namedArgs: {'val': data['rating'].toString()},
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      tr(
-                        'user_ratings_total',
-                        namedArgs: {
-                          'number': data['user_ratings_total'].toString(),
-                        },
+                        'my_rating',
+                        namedArgs: {'val': data['my_rating'].toString()},
                       ),
                     ),
                   ],
                 ),
-                Icon(
-                  getIconByName(icon['icon'] as String),
-                  size: 32,
-                  color: Color(icon['color'] as int),
-                ),
-              ],
-            ),
-            if (data['my_rating'] != null || data['my_comment'] != null)
-              const Divider(height: 20),
-            if (data['my_rating'] != null)
-              Row(
-                children: [
-                  const Icon(Icons.person, size: 18),
-                  const SizedBox(width: 4),
-                  Text(
-                    tr(
-                      'my_rating',
-                      namedArgs: {'val': data['my_rating'].toString()},
-                    ),
+              if (data['my_comment'] != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 4),
+                  child: Text(
+                    '"${data['my_comment']}"',
+                    style: const TextStyle(fontStyle: FontStyle.italic),
                   ),
-                ],
-              ),
-            if (data['my_comment'] != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(
-                  '"${data['my_comment']}"',
-                  style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
-              ),
-            if (myImages.isNotEmpty)
-              SizedBox(
-                height: 60,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: myImages.length,
-                  itemBuilder:
-                      (_, i) => Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.file(
-                            File(myImages[i]),
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
+              if (myImages.isNotEmpty)
+                SizedBox(
+                  height: 60,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: myImages.length,
+                    itemBuilder:
+                        (_, i) => Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.file(
+                              File(myImages[i]),
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                      ),
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

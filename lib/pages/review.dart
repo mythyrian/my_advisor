@@ -17,7 +17,6 @@ class ReviewPage extends StatefulWidget {
 }
 
 class _ReviewPageState extends State<ReviewPage> {
-
   String searchValue = "";
 
   @override
@@ -29,9 +28,15 @@ class _ReviewPageState extends State<ReviewPage> {
           pinned: true,
           snap: true,
           floating: true,
-          title: MySearchBar(showFilter: false, search: (value) => {setState(() {
-            searchValue = value;
-          })}),
+          title: MySearchBar(
+            showFilter: false,
+            search:
+                (value) => {
+                  setState(() {
+                    searchValue = value;
+                  }),
+                },
+          ),
         ),
         SliverToBoxAdapter(child: _buildBody()),
       ],
@@ -141,7 +146,15 @@ class _ReviewPageState extends State<ReviewPage> {
       ),
       items: List.generate(
         filterPlaces.length,
-        (index) => PropertyItem(data: filterPlaces[index]),
+        (index) => PropertyItem(
+          data: filterPlaces[index],
+          onConfirm: () async {
+            await deleteValueAtIndex('placeReviewed', index);
+            setState(() {
+              filterPlaces.removeAt(index);
+            });
+          },
+        ),
       ),
     );
   }

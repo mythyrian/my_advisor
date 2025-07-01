@@ -98,6 +98,25 @@ Future<void> deleteValueInList(String key, dynamic id) async {
   }
 }
 
+Future<void> deleteValueAtIndex(String key, int index) async {
+  final file = await _getJsonFile();
+
+  if (!(await file.exists())) return;
+
+  final contents = await file.readAsString();
+  final data = json.decode(contents);
+
+  if (data[key] is List) {
+    final list = data[key] as List;
+
+    if (index >= 0 && index < list.length) {
+      list.removeAt(index);
+      data[key] = list;
+      await file.writeAsString(json.encode(data));
+    }
+  }
+}
+
 Future<void> appendToList(String key, dynamic newValue) async {
   final file = await _getJsonFile();
 

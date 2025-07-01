@@ -51,5 +51,9 @@
   "museum": "Museo",
   "movie_theater": "Cinema",
   "amusement_park": "Parco divertimenti",
-  "theater": "Teatro"
+  "theater": "Teatro",
+  "confirm_action_title": "Elimina recensione",
+  "confirm_action_message": "Sei sicuro di voler eliminare questa recensione?",
+  "yes": "Sì",
+  "no": "No"
 }

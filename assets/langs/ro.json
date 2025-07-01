@@ -51,5 +51,9 @@
   "museum": "Muzeu",
   "movie_theater": "Cinema",
   "amusement_park": "Parc de distracții",
-  "theater": "Teatru"
+  "theater": "Teatru",
+  "confirm_action_title": "Șterge recenzia",
+  "confirm_action_message": "Ești sigur că vrei să ștergi această recenzie?",
+  "yes": "Da",
+  "no": "Nu"
 }
